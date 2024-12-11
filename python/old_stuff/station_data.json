@@ -1,0 +1,150 @@
+{
+"Classes": {
+    "Class 0a Orbital Platform": {
+    "tonnage": 1000,
+    "additional_modules": []
+    },
+    "Class 0b Orbital Platform": {
+    "tonnage": 3000,
+    "additional_modules": []
+    },
+    "Class 0c Orbital Platform": {
+    "tonnage": 10000,
+    "additional_modules": []
+    },
+    "Class I Station": {
+    "tonnage": 30000,
+    "additional_modules": []
+    },
+    "Class II Station": {
+    "tonnage": 100000,
+    "additional_modules": ["refuel_station"]
+    },
+    "Class III Station": {
+    "tonnage": 300000,
+    "additional_modules": ["refuel_station", "repair_bay"]
+    },
+    "Class IV Station": {
+    "tonnage": 1000000,
+    "additional_modules": ["refuel_station", "repair_bay"]
+    },
+    "Class V Station": {
+    "tonnage": 3000000,
+    "additional_modules": [
+        "refuel_station", "repair_bay", "construction_yard"
+    ]
+    },
+    "City-Station": {
+    "tonnage": 10000000,
+    "additional_modules": [
+        "refuel_station", "repair_bay", "construction_yard"
+    ]
+    }
+},
+"Hulls" : {
+    "7" : ["Basic Steel", 0.005],
+    "10" : ["Reinforced Steel", 0.008],
+    "14" : ["Superdense Steel", 0.0125],
+    "16" : ["Double Hull", 0.025]
+},
+"Power" : {
+    "Fission" : 3,
+    "Solar" : 7,
+    "Fusion (Basic)" : 10,
+    "Fusion (Standard)" : 15,
+    "Fusion (Advanced)" : 17,
+    "Antimatter" : 18
+},
+"Power Generation" : {
+    "Fission" : 8,
+    "Solar" : 5,
+    "Fusion (Basic)" : 10,
+    "Fusion (Standard)" : 15,
+    "Fusion (Advanced)" : 20,
+    "Antimatter" : 100
+},
+"Role Facilities" : {
+    "Corporate Mining Colony" : [
+    "ore_refinery", "manufacturing", "residential_zone"
+    ],
+    "Independent Mining Colony" : [
+    "ore_refinery", "manufacturing", "residential_zone"], 
+    "Espionage Facility": ["extended_sensors"],
+    "Deep Space Station": ["extended_sensors", "extended_communications"],
+    "Pirate Base": ["hanger", "weapon_systems"],
+    "Rebel Base": ["hanger", "weapon_systems"],
+    "Black Market": ["commercial_zone"],
+    "Corporate Headquarters": ["extended_communications"],
+    "Naval Base": ["hanger", "weapon_systems"],
+    "Prison": ["residential_zone"],
+    "Patrol Base": ["hanger"],
+    "Mercenary Base": ["hanger"],
+    "Transfer Station" : [],
+    "Government Research Station" : ["research_facility"],
+    "Independent Research Station" : ["research_facility"],
+    "Residential Annex" : ["residential_zone"],
+    "Industrial Park" : ["manufacturing"],
+    "City-Station" : [
+    "hanger", "civil_center", "residential_zone", "commercial_zone"
+    ]
+},
+"Module Data" : {
+    "hab" : {
+    "capacity_variable" : 0.01,
+    "tonnage_variable" : 2.2
+    }, 
+    "living_area" : {
+    "capacity_type" : 0.01,
+    "tonnage_variable" : 2.2
+    }, 
+    "medical" : {
+    "capacity_variable" : 0.005,
+    "tonnage_variable" : 0.8
+    }, 
+    "cargo" : {
+    "capacity_variable" : 0.1,
+    "tonnage_variable" : 1
+    }, 
+    "external_docking" : {
+    "capacity_variable" : 2,
+    "tonnage_variable" : 0
+    }, 
+    "refuel_station" : {
+    "install_type" : "by_level",
+    "level_1" : {
+        "capacity_variable" : 2,
+        "tonnage_variable" : 0
+    }
+    }, 
+    "repair_bay", 
+    "construction_yard", 
+    "hanger" : {
+    "install type" : "capacity",
+    "capacity_variable" : ,
+    "tonnage_variable" : 2
+    }, 
+    "drone_bay", 
+    "shipbreaking",
+    "library" : {
+    "install_type" : "module",
+    "tonnage" : 4
+    }, 
+    "gaming_space" : {
+    "install type" : "module",
+    "capacity_variable" : 0.66,
+    "tonnage_variable" : ,
+    }, 
+    "extended_sensors", 
+    "research_facility" : {
+    "install type" : "tonnage",
+    "capacity_variable" : 0.25,
+    "tonnage_variable" : 
+    },
+    "ore_refinery", 
+    "manufacturing", 
+    "extended_communications", 
+    "weapon_systems", 
+    "civil_center", 
+    "residential_zone", 
+    "commercial_zone"
+}

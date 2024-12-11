@@ -1,0 +1,3310 @@
+{
+	"descriptions": {
+		"stars": "Number of stars within the system",
+		"stellar_mass": "Masses of stars, divided up by two levels of seed rolls",
+		"stellar_age": "Randomly assigns the age of the star",
+		"system_age": "Age of star system based on primary type",
+		"luminosities": "Star luminosities by spectra",
+		"companion_orbit": "Orbit of companion stars",
+		"system_orbits": "Number of planets in orbital positions",
+		"orbit_types": "Defines whether a planetary orbit is epistellar, inner zone, or outer zone",
+		"satellite_types": "Types of Satellites",
+		"world_types": "Planetary types based on orbit and other factors",
+		"world_characteristics": "Basic world descriptions",
+		"world_generation": "Defined roll parameters for world characteristics based on world types"
+	},
+	"STARS": {
+		"BROWN_DWARF": {
+			"MASS": {
+				"0.01": 8,
+				"0.02": 10,
+				"0.03": 12,
+				"0.04": 14,
+				"0.05": 15,
+				"0.06": 16,
+				"0.07": 18
+			},
+			"PARAMETERS": {
+				"0.01": {
+					"Luminosity": 0.0073,
+					"Radius": 0.08021949
+				},
+				"0.02": {
+					"Luminosity": 0.0016,
+					"Radius": 0.0770107
+				},
+				"0.03": {
+					"Luminosity": 0.0045,
+					"Radius": 0.07288514
+				},
+				"0.04": {
+					"Luminosity": 0.0097,
+					"Radius": 0.07013475
+				},
+				"0.05": {
+					"Luminosity": 0.017,
+					"Radius": 0.0678428
+				},
+				"0.06": {
+					"Luminosity": 0.028,
+					"Radius": 0.06646758
+				},
+				"0.07": {
+					"Luminosity": 0.042,
+					"Radius": 0.0650924
+				}
+			},
+			"TEMPS": {
+				"250": 2,
+				"445": 3,
+				"640": 4,
+				"835": 5,
+				"1030": 6,
+				"1225": 7,
+				"1420": 8,
+				"1615": 9,
+				"1810": 10,
+				"2005": 11,
+				"2200": 12
+			},
+			"CLASS": {
+				"Y": 640,
+				"T": 1125,
+				"L": 2200
+			},
+			"MULTIPLIERS": {
+				"LUMINOSITY": {
+					"1": 1,
+					"0.41": 2,
+					"0.24": 3,
+					"0.16": 4,
+					"0.12": 5,
+					"0.097": 6,
+					"0.080": 7,
+					"0.067": 8,
+					"0.057": 9,
+					"0.050": 10,
+					"0.044": 11,
+					"0.040": 12,
+					"0.036": 13,
+					"0.032": 14
+				},
+				"RADIUS": {
+					"1.0": 1,
+					"0.96": 2,
+					"0.94": 3,
+					"0.93": 4,
+					"0.91": 5,
+					"0.90": 7,
+					"0.89": 8,
+					"0.88": 10,
+					"0.87": 13,
+					"0.86": 18
+				}
+			}
+		},
+		"STELLAR_MASS": {
+			"3": {
+				"2": 10,
+				"1.9": 18
+			},
+			"4": {
+				"1.8": 8,
+				"1.7": 11,
+				"1.6": 18
+			},
+			"5": {
+				"1.5": 7,
+				"1.45": 10,
+				"1.4": 12,
+				"1.35": 18
+			},
+			"6": {
+				"1.3": 7,
+				"1.25": 9,
+				"1.2": 10,
+				"1.15": 12,
+				"1.1": 18
+			},
+			"7": {
+				"1": 9,
+				"1.05": 7,
+				"0.95": 10,
+				"0.9": 12,
+				"0.85": 18
+			},
+			"8": {
+				"0.8": 7,
+				"0.75": 9,
+				"0.7": 10,
+				"0.65": 12,
+				"0.6": 18
+			},
+			"9": {
+				"0.55": 8,
+				"0.5": 11,
+				"0.45": 18
+			},
+			"10": {
+				"0.4": 8,
+				"0.35": 11,
+				"0.3": 18
+			},
+			"11": {
+				"0.25": 18
+			},
+			"12": {
+				"0.2": 18
+			},
+			"13": {
+				"0.15": 18
+			},
+			"14": {
+				"0.1": 18
+			}
+		},
+		"STELLAR_AGE": {
+			"3": [
+				0,
+				0,
+				0
+			],
+			"6": [
+				0.1,
+				0.3,
+				0.05
+			],
+			"10": [
+				2,
+				0.6,
+				0.1
+			],
+			"14": [
+				5.6,
+				0.6,
+				0.1
+			],
+			"17": [
+				8,
+				0.6,
+				0.1
+			],
+			"18": [
+				10,
+				0.6,
+				0.1
+			]
+		},
+		"STELLAR_VAR": {
+			"3": 3249,
+			"4": 4249,
+			"5": 5249,
+			"6": 6749,
+			"8": 8499,
+			"9": 9499,
+			"10": 10999,
+			"12": 13749,
+			"15": 17499,
+			"20": 20999,
+			"22": 23749,
+			"25": 26749,
+			"28": 28999,
+			"30": 32499,
+			"35": 37499,
+			"40": 42499,
+			"45": 47499,
+			"50": 54999,
+			"60": 64999,
+			"70": 74999,
+			"80": 84999,
+			"90": 94999,
+			"100": 100000,
+			"0.08": 74,
+			"0.1": 124,
+			"0.15": 174,
+			"0.2": 224,
+			"0.25": 274,
+			"0.3": 324,
+			"0.35": 374,
+			"0.4": 424,
+			"0.45": 474,
+			"0.5": 524,
+			"0.55": 574,
+			"0.6": 624,
+			"0.65": 674,
+			"0.7": 724,
+			"0.75": 774,
+			"0.8": 824,
+			"0.85": 874,
+			"0.9": 924,
+			"0.95": 974,
+			"1.0": 1024,
+			"1.05": 1074,
+			"1.1": 1124,
+			"1.15": 1174,
+			"1.2": 1224,
+			"1.25": 1274,
+			"1.3": 1324,
+			"1.35": 1374,
+			"1.4": 1424,
+			"1.45": 1474,
+			"1.5": 1524,
+			"1.55": 1574,
+			"1.6": 1624,
+			"1.65": 1674,
+			"1.7": 1724,
+			"1.75": 1774,
+			"1.8": 1824,
+			"1.85": 1874,
+			"1.9": 1924,
+			"1.95": 1974,
+			"2.0": 2499,
+			"3.5": 3749,
+			"4.5": 4749,
+			"5.5": 5749,
+			"7.5": 7749
+		},
+		"STELLAR_EVOLUTION": {
+			"1": {
+				"Type": "G2",
+				"Temperature": 5800,
+				"L-Min": 0.68,
+				"L-Max": 1.6,
+				"M-Span": 10,
+				"S-Span": 1.6,
+				"G-Span": 1
+			},
+			"2": {
+				"Type": "A5",
+				"Temperature": 8200,
+				"L-Min": 16,
+				"L-Max": 20,
+				"M-Span": 1.3,
+				"S-Span": 0.2,
+				"G-Span": 0.1
+			},
+			"0.08": {
+				"Type": "M8",
+				"Temperature": 3000,
+				"L-Min": 0.001
+			},
+			"0.1": {
+				"Type": "M7",
+				"Temperature": 3100,
+				"L-Min": 0.0012
+			},
+			"0.15": {
+				"Type": "M6",
+				"Temperature": 3200,
+				"L-Min": 0.0036
+			},
+			"0.2": {
+				"Type": "M5",
+				"Temperature": 3200,
+				"L-Min": 0.0079
+			},
+			"0.25": {
+				"Type": "M4",
+				"Temperature": 3300,
+				"L-Min": 0.015
+			},
+			"0.3": {
+				"Type": "M4",
+				"Temperature": 3300,
+				"L-Min": 0.024
+			},
+			"0.35": {
+				"Type": "M3",
+				"Temperature": 3400,
+				"L-Min": 0.037
+			},
+			"0.4": {
+				"Type": "M2",
+				"Temperature": 3500,
+				"L-Min": 0.054
+			},
+			"0.45": {
+				"Type": "M1",
+				"Temperature": 3600,
+				"L-Min": 0.07,
+				"L-Max": 0.08,
+				"M-Span": 70
+			},
+			"0.5": {
+				"Type": "M0",
+				"Temperature": 3800,
+				"L-Min": 0.09,
+				"L-Max": 0.11,
+				"M-Span": 59
+			},
+			"0.55": {
+				"Type": "K8",
+				"Temperature": 4000,
+				"L-Min": 0.11,
+				"L-Max": 0.15,
+				"M-Span": 50
+			},
+			"0.6": {
+				"Type": "K6",
+				"Temperature": 4200,
+				"L-Min": 0.13,
+				"L-Max": 0.2,
+				"M-Span": 42
+			},
+			"0.65": {
+				"Type": "K5",
+				"Temperature": 4400,
+				"L-Min": 0.15,
+				"L-Max": 0.25,
+				"M-Span": 37
+			},
+			"0.7": {
+				"Type": "K4",
+				"Temperature": 4600,
+				"L-Min": 0.19,
+				"L-Max": 0.35,
+				"M-Span": 30
+			},
+			"0.75": {
+				"Type": "K2",
+				"Temperature": 4900,
+				"L-Min": 0.23,
+				"L-Max": 0.48,
+				"M-Span": 24
+			},
+			"0.8": {
+				"Type": "K0",
+				"Temperature": 5200,
+				"L-Min": 0.28,
+				"L-Max": 0.65,
+				"M-Span": 20
+			},
+			"0.85": {
+				"Type": "G8",
+				"Temperature": 5400,
+				"L-Min": 0.36,
+				"L-Max": 0.84,
+				"M-Span": 17
+			},
+			"0.9": {
+				"Type": "G6",
+				"Temperature": 5500,
+				"L-Min": 0.45,
+				"L-Max": 1,
+				"M-Span": 14
+			},
+			"0.95": {
+				"Type": "G4",
+				"Temperature": 5700,
+				"L-Min": 0.56,
+				"L-Max": 1.3,
+				"M-Span": 12,
+				"S-Span": 1.8,
+				"G-Span": 1.1
+			},
+			"1.05": {
+				"Type": "G1",
+				"Temperature": 5900,
+				"L-Min": 0.87,
+				"L-Max": 1.9,
+				"M-Span": 8.8,
+				"S-Span": 1.4,
+				"G-Span": 0.8
+			},
+			"1.1": {
+				"Type": "G0",
+				"Temperature": 6000,
+				"L-Min": 1.1,
+				"L-Max": 2.2,
+				"M-Span": 7.7,
+				"S-Span": 1.2,
+				"G-Span": 0.7
+			},
+			"1.15": {
+				"Type": "F9",
+				"Temperature": 6100,
+				"L-Min": 1.4,
+				"L-Max": 2.6,
+				"M-Span": 6.7,
+				"S-Span": 1,
+				"G-Span": 0.6
+			},
+			"1.2": {
+				"Type": "F8",
+				"Temperature": 6300,
+				"L-Min": 1.7,
+				"L-Max": 3,
+				"M-Span": 5.9,
+				"S-Span": 0.9,
+				"G-Span": 0.6
+			},
+			"1.25": {
+				"Type": "F7",
+				"Temperature": 6400,
+				"L-Min": 2.1,
+				"L-Max": 3.5,
+				"M-Span": 5.2,
+				"S-Span": 0.8,
+				"G-Span": 0.5
+			},
+			"1.3": {
+				"Type": "F6",
+				"Temperature": 6500,
+				"L-Min": 2.5,
+				"L-Max": 3.9,
+				"M-Span": 4.6,
+				"S-Span": 0.7,
+				"G-Span": 0.4
+			},
+			"1.35": {
+				"Type": "F5",
+				"Temperature": 6600,
+				"L-Min": 3.1,
+				"L-Max": 4.5,
+				"M-Span": 4.1,
+				"S-Span": 0.6,
+				"G-Span": 0.4
+			},
+			"1.4": {
+				"Type": "F4",
+				"Temperature": 6700,
+				"L-Min": 3.7,
+				"L-Max": 5.1,
+				"M-Span": 3.7,
+				"S-Span": 0.6,
+				"G-Span": 0.4
+			},
+			"1.45": {
+				"Type": "F3",
+				"Temperature": 6900,
+				"L-Min": 4.3,
+				"L-Max": 5.7,
+				"M-Span": 3.3,
+				"S-Span": 0.5,
+				"G-Span": 0.3
+			},
+			"1.5": {
+				"Type": "F2",
+				"Temperature": 7000,
+				"L-Min": 5.1,
+				"L-Max": 6.5,
+				"M-Span": 3,
+				"S-Span": 0.5,
+				"G-Span": 0.3
+			},
+			"1.55": {
+				"Type": "F1",
+				"Temperature": 7100,
+				"L-Min": 5.9,
+				"L-Max": 7.2,
+				"M-Span": 2.8,
+				"S-Span": 0.4,
+				"G-Span": 0.3
+			},
+			"1.6": {
+				"Type": "F0",
+				"Temperature": 7300,
+				"L-Min": 6.7,
+				"L-Max": 8.2,
+				"M-Span": 2.5,
+				"S-Span": 0.4,
+				"G-Span": 0.2
+			},
+			"1.65": {
+				"Type": "A9",
+				"Temperature": 7400,
+				"L-Min": 7.6,
+				"L-Max": 9.3,
+				"M-Span": 2.3,
+				"S-Span": 0.3,
+				"G-Span": 0.2
+			},
+			"1.7": {
+				"Type": "A9",
+				"Temperature": 7500,
+				"L-Min": 8.6,
+				"L-Max": 10,
+				"M-Span": 2.1,
+				"S-Span": 0.3,
+				"G-Span": 0.2
+			},
+			"1.75": {
+				"Type": "A8",
+				"Temperature": 7600,
+				"L-Min": 9.7,
+				"L-Max": 11.5,
+				"M-Span": 1.9,
+				"S-Span": 0.3,
+				"G-Span": 0.2
+			},
+			"1.8": {
+				"Type": "A7",
+				"Temperature": 7800,
+				"L-Min": 11,
+				"L-Max": 13,
+				"M-Span": 1.8,
+				"S-Span": 0.3,
+				"G-Span": 0.2
+			},
+			"1.85": {
+				"Type": "A7",
+				"Temperature": 7900,
+				"L-Min": 12,
+				"L-Max": 15,
+				"M-Span": 1.7,
+				"S-Span": 0.3,
+				"G-Span": 0.2
+			},
+			"1.9": {
+				"Type": "A6",
+				"Temperature": 8000,
+				"L-Min": 13,
+				"L-Max": 16,
+				"M-Span": 1.5,
+				"S-Span": 0.2,
+				"G-Span": 0.1
+			},
+			"1.95": {
+				"Type": " A6",
+				"Temperature": 8100,
+				"L-Min": 15,
+				"L-Max": 19,
+				"M-Span": 1.4,
+				"S-Span": 0.2,
+				"G-Span": 0.1
+			}
+		},
+		"MASSIVE_STARS": {
+			"3": {
+				"Type": "B9",
+				"Luminosity": 90,
+				"Temperature": 9800,
+				"Stable Span": 0.33
+			},
+			"4": {
+				"Type": "B7",
+				"Luminosity": 300,
+				"Temperature": 12000,
+				"Stable Span": 0.13
+			},
+			"5": {
+				"Type": "B5",
+				"Luminosity": 700,
+				"Temperature": 14000,
+				"Stable Span": 0.07
+			},
+			"6": {
+				"Type": "B3",
+				"Luminosity": 1800,
+				"Temperature": 16000,
+				"Stable Span": 0.04
+			},
+			"8": {
+				"Type": "B1",
+				"Luminosity": 5000,
+				"Temperature": 19000,
+				"Stable Span": 0.015
+			},
+			"9": {
+				"Type": "B1",
+				"Luminosity": 8000,
+				"Temperature": 20000,
+				"Stable Span": 0.011
+			},
+			"10": {
+				"Type": "B1",
+				"Luminosity": 11000,
+				"Temperature": 18000,
+				"Stable Span": 0.009
+			},
+			"12": {
+				"Type": "B0",
+				"Luminosity": 20000,
+				"Temperature": 24000,
+				"Stable Span": 0.006
+			},
+			"15": {
+				"Type": "B0",
+				"Luminosity": 58000,
+				"Temperature": 26000,
+				"Stable Span": 0.0026
+			},
+			"20": {
+				"Type": "O9",
+				"Luminosity": 90000,
+				"Temperature": 33000,
+				"Stable Span": 0.0013
+			},
+			"22": {
+				"Type": "O9",
+				"Luminosity": 130000,
+				"Temperature": 34000,
+				"Stable Span": 0.0011
+			},
+			"25": {
+				"Type": "O8",
+				"Luminosity": 170000,
+				"Temperature": 35000,
+				"Stable Span": 0.0007
+			},
+			"28": {
+				"Type": "O8",
+				"Luminosity": 244000,
+				"Temperature": 36000,
+				"Stable Span": 0.00057
+			},
+			"30": {
+				"Type": "O7",
+				"Luminosity": 318000,
+				"Temperature": 37000,
+				"Stable Span": 0.00044
+			},
+			"35": {
+				"Type": "O7",
+				"Luminosity": 430000,
+				"Temperature": 40000,
+				"Stable Span": 0.00033
+			},
+			"40": {
+				"Type": "O6",
+				"Luminosity": 500000,
+				"Temperature": 39000,
+				"Stable Span": 0.00025
+			},
+			"45": {
+				"Type": "O6",
+				"Luminosity": 540000,
+				"Temperature": 40000,
+				"Stable Span": 0.00019
+			},
+			"50": {
+				"Type": "O5",
+				"Luminosity": 3600000,
+				"Temperature": 40500,
+				"Stable Span": 0.00014
+			},
+			"60": {
+				"Type": "O5",
+				"Luminosity": 790000,
+				"Temperature": 41500,
+				"Stable Span": 0.00009
+			},
+			"70": {
+				"Type": "O4",
+				"Luminosity": 900000,
+				"Temperature": 42000,
+				"Stable Span": 0.00006
+			},
+			"80": {
+				"Type": "O4",
+				"Luminosity": 1070000,
+				"Temperature": 42500,
+				"Stable Span": 0.000035
+			},
+			"90": {
+				"Type": "O3",
+				"Luminosity": 1100000,
+				"Temperature": 43000,
+				"Stable Span": 0.000016
+			},
+			"100": {
+				"Type": "O3",
+				"Luminosity": 1200000,
+				"Temperature": 44000,
+				"Stable Span": 0.000009
+			},
+			"3.5": {
+				"Type": "B8",
+				"Luminosity": 200,
+				"Temperature": 11000,
+				"Stable Span": 0.2
+			},
+			"4.5": {
+				"Type": "B6",
+				"Luminosity": 450,
+				"Temperature": 13000,
+				"Stable Span": 0.1
+			},
+			"5.5": {
+				"Type": "B4",
+				"Luminosity": 1000,
+				"Temperature": 15000,
+				"Stable Span": 0.05
+			},
+			"7.5": {
+				"Type": "B2",
+				"Luminosity": 3600,
+				"Temperature": 18000,
+				"Stable Span": 0.02
+			}
+		},
+		"MASS_MAP": {
+			"3": 3,
+			"4": 4,
+			"5": 5,
+			"6": 6,
+			"8": 8,
+			"9": 9,
+			"10": 10,
+			"12": 12,
+			"15": 15,
+			"20": 20,
+			"22": 22,
+			"25": 25,
+			"28": 28,
+			"30": 30,
+			"35": 35,
+			"40": 40,
+			"45": 45,
+			"50": 50,
+			"60": 60,
+			"70": 70,
+			"80": 80,
+			"90": 90,
+			"100": 100,
+			"3.5": 3.5,
+			"4.5": 4.5,
+			"5.5": 5.5,
+			"7.5": 7
+		},
+		"LUMINOSITY_VARIABLES": {
+			"I": {
+				"Ct": 5520.94,
+				"Et": 0.519,
+				"Cl": 25557.62,
+				"El": 1.055
+			},
+			"II": {
+				"Ct": 5310.42,
+				"Et": 0.5495,
+				"Cl": 12855.2,
+				"El": 2.2275
+			},
+			"III": {
+				"Ct": 5099.91,
+				"Et": 0.58,
+				"Cl": 152.78,
+				"El": 3.4
+			},
+			"IV": {
+				"Ct": 5447.29,
+				"Et": 0.615,
+				"Cl": 76.855,
+				"El": 3.71
+			},
+			"V": {
+				"Ct": 5794.66,
+				"Et": 0.65,
+				"Cl": 0.93,
+				"El": 4.02
+			}
+		}
+	},
+	"PLANET": {
+		"ROGUE TYPE": {
+			"Acheronian": 2,
+			"Rockball": 5,
+			"Snowball": 12,
+			"Oceanic": 14,
+			"Asphodelian": 15,
+			"Helian": 16,
+			"Jovian": 17,
+			"Panthalassic": 18
+		},
+		"DEFAULT_SIZE": {
+			"Asteroid": [
+				0,
+				3
+			],
+			"Dwarf": [
+				3,
+				7
+			],
+			"Terrestrial": [
+				6,
+				12
+			],
+			"Helian": [
+				11,
+				17
+			],
+			"Jovian": [
+				16,
+				26
+			]
+		},
+		"ADJUSTED_ATMO": {
+			"0": 2,
+			"1": 5,
+			"10": 15
+		},
+		"ATMO_MASS": {
+			"1": [
+				0,
+				0.01
+			],
+			"3": [
+				0.01,
+				0.5
+			],
+			"5": [
+				0.5,
+				0.8
+			],
+			"7": [
+				0.8,
+				1.2
+			],
+			"9": [
+				1.2,
+				1.5
+			],
+			"12": [
+				1.5,
+				10
+			]
+		},
+		"TAINTED_ATMO": {
+			": Chlorine": 3,
+			": Fluorine": 4,
+			": Sulfur Compounds": 6,
+			": Nitrogen Compounds": 7,
+			": Organic Toxins": 9,
+			": Low Oxygen": 11,
+			": Heavy metal pollutants": 12,
+			": Radioactive pollutants": 13,
+			": High Carbon Dioxide": 14,
+			": High Oxygen": 16,
+			": Inert Gases": 18
+		},
+		"TOXICITY LEVEL": {
+			": Chlorine": {
+				" (Mildly Toxic)": 3,
+				" (Highly Toxic)": 4,
+				" (Corrosive)": 18
+			},
+			": Fluorine": {
+				" (Mildly Toxic)": 3,
+				" (Highly Toxic)": 4,
+				" (Corrosive)": 18
+			},
+			": Sulfur Compounds": {
+				" (Mildly Toxic)": 16,
+				" (Highly Toxic)": 18
+			},
+			": Nitrogen Compounds": {
+				" (Mildly Toxic)": 16,
+				" (Highly Toxic)": 18
+			},
+			": Organic Toxins": {
+				" (Mildly Toxic)": 16,
+				" (Highly Toxic)": 18
+			},
+			": Low Oxygen": {
+				" (Suffocating)": 1,
+				" (Trace)": 3,
+				" (Very Thin)": 5,
+				" (Thin)": 7,
+				" (Standard)": 9,
+				"": 18
+			},
+			": Heavy metal pollutants": {
+				" (Mildly Toxic)": 17,
+				" (Highly Toxic)": 18
+			},
+			": Radioactive pollutants": {
+				" (Mildly Toxic)": 14,
+				" (Highly Toxic)": 18
+			},
+			": High Carbon Dioxide": {
+				" (Uncomfortable)": 10,
+				" (Mildly Toxic)": 18
+			},
+			": High Oxygen": {
+				" (Very Thin)": 1,
+				" (Thin)": 3,
+				" (Standard)": 5,
+				" (Dense)": 7,
+				" (Very Dense)": 9,
+				" (Mildly Toxic)": 18
+			},
+			": Inert Gases": {
+				"": 18
+			}
+		},
+		"ATMO_COMPOSITION": {
+			"Vacuum": 0,
+			"Trace": 1,
+			"Tainted, Very Thin, Breathable": 2,
+			"Very Thin, Breathable: Nitrogen-Oxygen": 3,
+			"Tainted, Thin, Breathable": 4,
+			"Thin, Breathable: Nitrogen-Oxygen": 5,
+			"Breathable: Nitrogen-Oxygen": 6,
+			"Tainted, Breathable": 7,
+			"Dense, Breathable: Nitrogen-Oxygen": 8,
+			"Tainted, Dense, Breathable": 9,
+			"Tainted, Unbreathable": 10,
+			"Corrosive": 11,
+			"Insidious": 12,
+			"Tainted, Super-Dense, Unbreathable": 13,
+			"Super-Dense, Breathable*: Nitrogen-Oxygen": 14,
+			"Tainted, Super-Dense, Breathable*": 15
+		},
+		"CLIMATE": {
+			"Frozen": 244,
+			"Very Cold": 255,
+			"Cold": 266,
+			"Chilly": 278,
+			"Cool": 289,
+			"Normal": 300,
+			"Warm": 311,
+			"Tropical": 322,
+			"Hot": 333,
+			"Very Hot": 344,
+			"Infernal": 100000
+		},
+		"WORLD_CLASSES": {
+			"Asteroid": {
+				"epistellar": {
+					"Rockball (Moonlet)": 18,
+					"Hephaestian (Moonlet)": 30,
+					"Hebean (Moonlet)": 34,
+					"Promethean (Moonlet)": 36
+				},
+				"inner": {
+					"Rockball (Moonlet)": 11,
+					"Arean (Moonlet)": 16,
+					"Hephaestian (Moonlet)": 19,
+					"Hebean (Moonlet)": 30,
+					"Promethean (Moonlet)": 36
+				},
+				"outer": {
+					"Snowball (Moonlet)": 11,
+					"Rockball (Moonlet)": 16,
+					"Hephaestian (Moonlet)": 19,
+					"Hebean (Moonlet)": 27,
+					"Arean (Moonlet)": 33,
+					"Promethean (Moonlet)": 36
+				}
+			},
+			"Dwarf": {
+				"epistellar": {
+					"Rockball": 18,
+					"Hephaestian": 30,
+					"Hebean": 34,
+					"Hephaestian (Moonlet)": 36
+				},
+				"inner": {
+					"Rockball": 11,
+					"Arean": 16,
+					"Hephaestian": 19,
+					"Hebean": 30,
+					"Promethean": 36
+				},
+				"outer": {
+					"Snowball": 11,
+					"Rockball": 16,
+					"Hephaestian": 19,
+					"Hebean": 27,
+					"Arean": 33,
+					"Promethean": 36
+				}
+			},
+			"Terrestrial": {
+				"epistellar": {
+					"JaniLithic": 21,
+					"Vesperian": 29,
+					"Telluric": 36
+				},
+				"inner": {
+					"Telluric": 14,
+					"Arid": 21,
+					"Oceanic": 29,
+					"Tectonic": 26
+				},
+				"outer": {
+					"Arid": 21,
+					"Tectonic": 30,
+					"Oceanic": 36
+				}
+			},
+			"Helian": {
+				"epistellar": {
+					"Helian": 28,
+					"Asphodelian": 36
+				},
+				"inner": {
+					"Helian": 25,
+					"Panthalassic": 36
+				},
+				"outer": {
+					"Helian": 36
+				}
+			},
+			"Jovian": {
+				"epistellar": {
+					"Jovian": 28,
+					"Chthonian": 36
+				},
+				"inner": {
+					"Jovian": 36
+				},
+				"outer": {
+					"Jovian": 36
+				}
+			}
+		},
+		"III_CLASSES": {
+			"Asteroid": "Stygian",
+			"Dwarf": "Stygian",
+			"Terrestrial": "Acheronian",
+			"Helian": "Asphodelian",
+			"Jovian": "Chthonian"
+		},
+		"TYPE_DATA": {
+			"Acheronian": {
+				"Planet_class": "Acheronian",
+				"World_type": "Barren",
+				"Size_Mod": 4,
+				"Absorption": 0.77,
+				"Greenhouse": 2,
+				"Atmosphere": [
+					1,
+					1,
+					0
+				],
+				"Hydrosphere": [
+					1,
+					0,
+					0
+				],
+				"Chemistry": [
+					1,
+					0,
+					0
+				],
+				"Biosphere": [
+					1,
+					0,
+					0
+				]
+			},
+			"Hephaestian (Moonlet)": {
+				"Planet_class": "Hephaestian",
+				"World_type": "Hostile",
+				"Size_Sides": 4,
+				"Absorption": 0.97,
+				"Greenhouse": 0,
+				"Atmosphere": [
+					1,
+					1,
+					0
+				],
+				"Hydrosphere": [
+					15,
+					1,
+					0
+				],
+				"Chemistry": [
+					1,
+					0,
+					0
+				],
+				"Biosphere": [
+					1,
+					0,
+					0
+				]
+			},
+			"JaniLithic": {
+				"Planet_class": "JaniLithic",
+				"World_type": "Hostile",
+				"Size_Mod": 4,
+				"Absorption": 0.97,
+				"Greenhouse": 0,
+				"Atmosphere": [
+					1,
+					6,
+					0
+				],
+				"Atmosphere_results": {
+					"0": [
+						1,
+						1,
+						0
+					],
+					"1": [
+						1,
+						1,
+						0
+					],
+					"2": [
+						1,
+						1,
+						0
+					],
+					"3": [
+						1,
+						1,
+						0
+					],
+					"4": [
+						1,
+						1,
+						0
+					],
+					"5": [
+						1,
+						1,
+						0
+					],
+					"6": [
+						1,
+						1,
+						0
+					],
+					"7": [
+						1,
+						1,
+						0
+					],
+					"8": [
+						1,
+						1,
+						0
+					],
+					"9": [
+						1,
+						1,
+						0
+					],
+					"10": [
+						4,
+						1,
+						0
+					]
+				},
+				"Hydrosphere": [
+					1,
+					0,
+					0
+				],
+				"Chemistry": [
+					1,
+					0,
+					0
+				],
+				"Biosphere": [
+					1,
+					0,
+					0
+				]
+			},
+			"Promethean (Moonlet)": {
+				"Planet_class": "Promethean",
+				"World_type": "Garden",
+				"Size_Sides": 4,
+				"Absorption": 0.92,
+				"Greenhouse": 0.16,
+				"Atmosphere": [
+					2,
+					6,
+					-7
+				],
+				"Atmosphere_results": {
+					"0": [
+						1,
+						0,
+						0
+					],
+					"1": [
+						1,
+						0,
+						0
+					],
+					"2": [
+						1,
+						0,
+						0
+					],
+					"3": [
+						3,
+						1,
+						0
+					],
+					"4": [
+						4,
+						1,
+						0
+					],
+					"5": [
+						5,
+						1,
+						0
+					],
+					"6": [
+						6,
+						1,
+						0
+					],
+					"7": [
+						7,
+						1,
+						0
+					],
+					"8": [
+						8,
+						1,
+						0
+					],
+					"9": [
+						9,
+						1,
+						0
+					]
+				},
+				"Hydrosphere": [
+					2,
+					6,
+					-2
+				],
+				"Chemistry": [
+					1,
+					6,
+					0
+				],
+				"Chemistry_results": {
+					"Water": 4,
+					"Ammonia": 6,
+					"Methane": 8
+				},
+				"Biosphere": [
+					1,
+					0,
+					0
+				],
+				"Bio_results": {
+					"0": [
+						1,
+						0,
+						0
+					],
+					"1": [
+						1,
+						3,
+						0
+					],
+					"2": [
+						2,
+						6,
+						0
+					]
+				}
+			},
+			"Stygian": {
+				"Planet_class": "Stygian",
+				"World_type": "Hostile",
+				"Absorption": 0.77,
+				"Greenhouse": 0,
+				"Atmosphere": [
+					1,
+					0,
+					0
+				],
+				"Hydrosphere": [
+					1,
+					0,
+					0
+				],
+				"Chemistry": [
+					1,
+					0,
+					0
+				],
+				"Biosphere": [
+					1,
+					0,
+					0
+				]
+			},
+			"Stygian (Moonlet)": {
+				"Planet_class": "Stygian",
+				"World_type": "Hostile",
+				"Size_Sides": 4,
+				"Absorption": 0.77,
+				"Greenhouse": 0,
+				"Atmosphere": [
+					1,
+					0,
+					0
+				],
+				"Hydrosphere": [
+					1,
+					0,
+					0
+				],
+				"Chemistry": [
+					1,
+					0,
+					0
+				],
+				"Biosphere": [
+					1,
+					0,
+					0
+				]
+			},
+			"Tectonic": {
+				"Planet_class": "Tectonic",
+				"World_type": "Garden",
+				"Size_Mod": 6,
+				"Absorption": 0.92,
+				"Greenhouse": 0.16,
+				"Atmosphere": [
+					2,
+					6,
+					-7
+				],
+				"Atmosphere_results": {
+					"0": [
+						1,
+						0,
+						0
+					],
+					"1": [
+						1,
+						0,
+						0
+					],
+					"2": [
+						1,
+						0,
+						0
+					],
+					"3": [
+						3,
+						1,
+						0
+					],
+					"4": [
+						4,
+						1,
+						0
+					],
+					"5": [
+						5,
+						1,
+						0
+					],
+					"6": [
+						6,
+						1,
+						0
+					],
+					"7": [
+						7,
+						1,
+						0
+					],
+					"8": [
+						8,
+						1,
+						0
+					],
+					"9": [
+						9,
+						1,
+						0
+					]
+				},
+				"Hydrosphere": [
+					2,
+					6,
+					-2
+				],
+				"Chemistry": [
+					2,
+					6,
+					0
+				],
+				"Chemistry_results": {
+					"Water": 8,
+					"Sulfur": 11,
+					"Chlorine": 13,
+					"Ammonia": 14,
+					"Methane": 16
+				},
+				"Biosphere": [
+					1,
+					0,
+					0
+				],
+				"Bio_results": {
+					"0": [
+						1,
+						0,
+						0
+					],
+					"1": [
+						1,
+						3,
+						0
+					],
+					"2": [
+						2,
+						6,
+						0
+					]
+				}
+			},
+			"Arean": {
+				"Planet_class": "Arean",
+				"World_type": "Barren",
+				"Absorption": 0.96,
+				"Greenhouse": 0,
+				"Atmosphere": [
+					1,
+					6,
+					0
+				],
+				"Atmosphere_results": {
+					"0": [
+						1,
+						1,
+						0
+					],
+					"1": [
+						1,
+						1,
+						0
+					],
+					"2": [
+						1,
+						1,
+						0
+					],
+					"3": [
+						1,
+						1,
+						0
+					],
+					"4": [
+						1,
+						1,
+						0
+					],
+					"5": [
+						1,
+						1,
+						0
+					],
+					"6": [
+						1,
+						1,
+						0
+					],
+					"7": [
+						1,
+						1,
+						0
+					],
+					"8": [
+						1,
+						1,
+						0
+					],
+					"9": [
+						1,
+						1,
+						0
+					],
+					"10": [
+						4,
+						1,
+						0
+					]
+				},
+				"Hydrosphere": [
+					1,
+					6,
+					0
+				],
+				"Chemistry": [
+					1,
+					6,
+					0
+				],
+				"Chemistry_results": {
+					"Water": 4,
+					"Ammonia": 6,
+					"Methane": 8
+				},
+				"Biosphere": [
+					1,
+					3,
+					0
+				],
+				"Biosphere_results": {
+					"0": [
+						1,
+						0,
+						0
+					],
+					"1": [
+						1,
+						3,
+						0
+					],
+					"2": [
+						1,
+						6,
+						-2
+					],
+					"3": [
+						1,
+						6,
+						-4
+					]
+				}
+			},
+			"Arean (Moonlet)": {
+				"Planet_class": "Arean",
+				"World_type": "Barren",
+				"Size_Sides": 4,
+				"Absorption": 0.97,
+				"Greenhouse": 0,
+				"Atmosphere": [
+					1,
+					6,
+					0
+				],
+				"Atmosphere_results": {
+					"0": [
+						1,
+						1,
+						0
+					],
+					"1": [
+						1,
+						1,
+						0
+					],
+					"2": [
+						1,
+						1,
+						0
+					],
+					"3": [
+						1,
+						1,
+						0
+					],
+					"4": [
+						1,
+						1,
+						0
+					],
+					"5": [
+						1,
+						1,
+						0
+					],
+					"6": [
+						1,
+						1,
+						0
+					],
+					"7": [
+						1,
+						1,
+						0
+					],
+					"8": [
+						1,
+						1,
+						0
+					],
+					"9": [
+						1,
+						1,
+						0
+					],
+					"10": [
+						4,
+						1,
+						0
+					]
+				},
+				"Hydrosphere": [
+					1,
+					6,
+					0
+				],
+				"Chemistry": [
+					1,
+					6,
+					0
+				],
+				"Chemistry_results": {
+					"Water": 4,
+					"Ammonia": 6,
+					"Methane": 8
+				},
+				"Biosphere": [
+					1,
+					3,
+					0
+				],
+				"Biosphere_results": {
+					"0": [
+						1,
+						0,
+						0
+					],
+					"1": [
+						1,
+						3,
+						0
+					],
+					"2": [
+						1,
+						6,
+						-2
+					],
+					"3": [
+						1,
+						6,
+						-4
+					]
+				}
+			},
+			"Arid": {
+				"Planet_class": "Arid",
+				"World_type": "Barren",
+				"Size_Sides": 4,
+				"Absorption": 0.92,
+				"Greenhouse": 0.16,
+				"Atmosphere": [
+					2,
+					6,
+					-7
+				],
+				"Atmosphere_results": {
+					"0": [
+						2,
+						1,
+						0
+					],
+					"1": [
+						2,
+						1,
+						0
+					],
+					"2": [
+						2,
+						1,
+						0
+					],
+					"3": [
+						3,
+						1,
+						0
+					],
+					"4": [
+						4,
+						1,
+						0
+					],
+					"5": [
+						5,
+						1,
+						0
+					],
+					"6": [
+						6,
+						1,
+						0
+					],
+					"7": [
+						7,
+						1,
+						0
+					],
+					"8": [
+						8,
+						1,
+						0
+					],
+					"9": [
+						9,
+						1,
+						0
+					]
+				},
+				"Hydrosphere": [
+					1,
+					3,
+					0
+				],
+				"Chemistry": [
+					1,
+					6,
+					0
+				],
+				"Chemistry_results": {
+					"Water": 6,
+					"Ammonia": 8,
+					"Methane": 10
+				},
+				"Biosphere": [
+					1,
+					3,
+					0
+				],
+				"Biosphere_results": {
+					"0": [
+						1,
+						6,
+						-4
+					],
+					"1": [
+						1,
+						6,
+						-4
+					],
+					"2": [
+						1,
+						3,
+						0
+					],
+					"3": [
+						1,
+						6,
+						-2
+					]
+				}
+			},
+			"Asphodelian": {
+				"Planet_class": "Asphodelian",
+				"World_type": "Hostile",
+				"Size_Mod": 9,
+				"Absorption": 0.97,
+				"Greenhouse": 0,
+				"Atmosphere": [
+					1,
+					1,
+					0
+				],
+				"Hydrosphere": [
+					1,
+					0,
+					0
+				],
+				"Chemistry": [
+					1,
+					0,
+					0
+				],
+				"Biosphere": [
+					1,
+					0,
+					0
+				]
+			},
+			"Chthonian": {
+				"Planet_class": "Chthonian",
+				"World_type": "Hostile",
+				"Size_Dice": 2,
+				"Size_Sides": 6,
+				"Size_Mod": 14,
+				"Absorption": 0.97,
+				"Greenhouse": 0,
+				"Atmosphere": [
+					1,
+					1,
+					0
+				],
+				"Hydrosphere": [
+					1,
+					0,
+					0
+				],
+				"Chemistry": [
+					1,
+					0,
+					0
+				],
+				"Biosphere": [
+					1,
+					0,
+					0
+				]
+			},
+			"Hebean": {
+				"Planet_class": "Hebean",
+				"World_type": "Barren",
+				"Absorption": 0.67,
+				"Greenhouse": 0,
+				"Atmosphere": [
+					1,
+					6,
+					-6
+				],
+				"Atmosphere_results": {
+					"0": [
+						1,
+						0,
+						0
+					],
+					"1": [
+						1,
+						1,
+						0
+					],
+					"2": [
+						1,
+						1,
+						0
+					],
+					"3": [
+						1,
+						1,
+						0
+					],
+					"4": [
+						1,
+						1,
+						0
+					],
+					"5": [
+						1,
+						1,
+						0
+					],
+					"6": [
+						1,
+						1,
+						0
+					],
+					"7": [
+						1,
+						1,
+						0
+					],
+					"8": [
+						1,
+						1,
+						0
+					],
+					"9": [
+						1,
+						1,
+						0
+					],
+					"10": [
+						2,
+						1,
+						0
+					]
+				},
+				"Hydrosphere": [
+					2,
+					6,
+					-11
+				],
+				"Chemistry": [
+					1,
+					0,
+					0
+				],
+				"Biosphere": [
+					1,
+					0,
+					0
+				]
+			},
+			"Hebean (Moonlet)": {
+				"Planet_class": "Hebean",
+				"World_type": "Barren",
+				"Size_Sides": 4,
+				"Absorption": 0.67,
+				"Greenhouse": 0,
+				"Atmosphere": [
+					1,
+					6,
+					-6
+				],
+				"Atmosphere_results": {
+					"0": [
+						1,
+						0,
+						0
+					],
+					"1": [
+						1,
+						1,
+						0
+					],
+					"2": [
+						1,
+						1,
+						0
+					],
+					"3": [
+						1,
+						1,
+						0
+					],
+					"4": [
+						1,
+						1,
+						0
+					],
+					"5": [
+						1,
+						1,
+						0
+					],
+					"6": [
+						1,
+						1,
+						0
+					],
+					"7": [
+						1,
+						1,
+						0
+					],
+					"8": [
+						1,
+						1,
+						0
+					],
+					"9": [
+						1,
+						1,
+						0
+					],
+					"10": [
+						2,
+						1,
+						0
+					]
+				},
+				"Hydrosphere": [
+					2,
+					6,
+					-11
+				],
+				"Chemistry": [
+					1,
+					0,
+					0
+				],
+				"Biosphere": [
+					1,
+					0,
+					0
+				]
+			},
+			"Helian": {
+				"Planet_class": "Helian",
+				"World_type": "Hostile",
+				"Size_Mod": 9,
+				"Absorption": 0.84,
+				"Greenhouse": 0.2,
+				"Atmosphere": [
+					13,
+					1,
+					0
+				],
+				"Hydrosphere": [
+					1,
+					6,
+					0
+				],
+				"Hydro_results": {
+					"0": [
+						2,
+						1,
+						0
+					],
+					"1": [
+						2,
+						1,
+						0
+					],
+					"2": [
+						2,
+						1,
+						0
+					],
+					"3": [
+						2,
+						1,
+						0
+					],
+					"4": [
+						2,
+						6,
+						-1
+					],
+					"5": [
+						2,
+						6,
+						-1
+					],
+					"6": [
+						15,
+						1,
+						0
+					]
+				},
+				"Chemistry": [
+					1,
+					0,
+					0
+				],
+				"Biosphere": [
+					1,
+					0,
+					0
+				]
+			},
+			"Hephaestian": {
+				"Planet_class": "Hephaestian",
+				"World_type": "Hostile",
+				"Size_Mod": 0,
+				"Absorption": 0.97,
+				"Greenhouse": 0,
+				"Atmosphere": [
+					1,
+					1,
+					0
+				],
+				"Hydrosphere": [
+					15,
+					1,
+					0
+				],
+				"Chemistry": [
+					1,
+					0,
+					0
+				],
+				"Biosphere": [
+					1,
+					0,
+					0
+				]
+			},
+			"Jovian": {
+				"Planet_class": "Jovian",
+				"World_type": "Hostile",
+				"Size_Dice": 2,
+				"Size_Sides": 6,
+				"Size_Mod": 14,
+				"Absorption": 0.77,
+				"Greenhouse": 2,
+				"Atmosphere": [
+					15,
+					1,
+					0
+				],
+				"Hydrosphere": [
+					15,
+					1,
+					0
+				],
+				"Chemistry": [
+					1,
+					6,
+					0
+				],
+				"Chemistry_results": {
+					"Water": 4,
+					"Ammonia": 6
+				},
+				"Biosphere": [
+					1,
+					6,
+					0
+				],
+				"Bio_results": {
+					"0": [
+						5,
+						1,
+						0
+					],
+					"1": [
+						1,
+						3,
+						0
+					],
+					"2": [
+						2,
+						6,
+						0
+					]
+				}
+			},
+			"Oceanic": {
+				"Planet_class": "Oceanic",
+				"World_type": "Barren",
+				"Size_Mod": 6,
+				"Absorption": 0.84,
+				"Greenhouse": 0.16,
+				"Atmosphere": [
+					2,
+					6,
+					-6
+				],
+				"Atmosphere_results": {
+					"0": [
+						1,
+						0,
+						0
+					],
+					"1": [
+						1,
+						0,
+						0
+					],
+					"2": [
+						2,
+						1,
+						0
+					],
+					"3": [
+						3,
+						1,
+						0
+					],
+					"4": [
+						4,
+						1,
+						0
+					],
+					"5": [
+						5,
+						1,
+						0
+					],
+					"6": [
+						6,
+						1,
+						0
+					],
+					"7": [
+						7,
+						1,
+						0
+					],
+					"8": [
+						8,
+						1,
+						0
+					],
+					"9": [
+						9,
+						1,
+						0
+					],
+					"10": [
+						10,
+						1,
+						0
+					],
+					"11": [
+						11,
+						1,
+						0
+					],
+					"12": [
+						12,
+						1,
+						0
+					]
+				},
+				"Atmo2_results": {
+					"0": [
+						1,
+						1,
+						0
+					],
+					"1": [
+						1,
+						1,
+						0
+					],
+					"2": [
+						1,
+						1,
+						0
+					],
+					"3": [
+						1,
+						1,
+						0
+					],
+					"4": [
+						1,
+						1,
+						0
+					],
+					"5": [
+						1,
+						1,
+						0
+					],
+					"6": [
+						1,
+						1,
+						0
+					],
+					"7": [
+						1,
+						1,
+						0
+					],
+					"8": [
+						1,
+						1,
+						0
+					],
+					"9": [
+						1,
+						1,
+						0
+					],
+					"10": [
+						2,
+						1,
+						0
+					],
+					"11": [
+						2,
+						1,
+						0
+					],
+					"12": [
+						2,
+						1,
+						0
+					],
+					"13": [
+						5,
+						1,
+						0
+					]
+				},
+				"Hydrosphere": [
+					11,
+					1,
+					0
+				],
+				"Chemistry": [
+					1,
+					6,
+					0
+				],
+				"Chemistry_results": {
+					"Water": 6,
+					"Ammonia": 8,
+					"Methane": 10
+				},
+				"Biosphere": [
+					1,
+					3,
+					0
+				],
+				"Bio_results": {
+					"0": [
+						1,
+						0,
+						0
+					],
+					"1": [
+						1,
+						3,
+						0
+					],
+					"2": [
+						2,
+						6,
+						0
+					]
+				}
+			},
+			"Panthalassic": {
+				"Planet_class": "Panthalassic",
+				"World_type": "Hostile",
+				"Size_Mod": 9,
+				"Absorption": 0.77,
+				"Greenhouse": 2,
+				"Atmosphere": [
+					5,
+					1,
+					8
+				],
+				"Hydrosphere": [
+					11,
+					1,
+					0
+				],
+				"Chemistry": [
+					1,
+					6,
+					0
+				],
+				"Chemistry_results": {
+					"Water": 0,
+					"Sulfur": 9,
+					"Chlorine": 12,
+					"Ammonia": 13,
+					"Methane": 15
+				},
+				"Biosphere": [
+					1,
+					0,
+					0
+				],
+				"Bio_results": {
+					"0": [
+						1,
+						0,
+						0
+					],
+					"1": [
+						1,
+						3,
+						0
+					],
+					"2": [
+						2,
+						6,
+						0
+					]
+				}
+			},
+			"Promethean": {
+				"Planet_class": "Promethean",
+				"World_type": "Garden",
+				"Absorption": 0.92,
+				"Greenhouse": 0.16,
+				"Atmosphere": [
+					2,
+					6,
+					-7
+				],
+				"Atmosphere_results": {
+					"0": [
+						1,
+						0,
+						0
+					],
+					"1": [
+						1,
+						0,
+						0
+					],
+					"2": [
+						1,
+						0,
+						0
+					],
+					"3": [
+						3,
+						1,
+						0
+					],
+					"4": [
+						4,
+						1,
+						0
+					],
+					"5": [
+						5,
+						1,
+						0
+					],
+					"6": [
+						6,
+						1,
+						0
+					],
+					"7": [
+						7,
+						1,
+						0
+					],
+					"8": [
+						8,
+						1,
+						0
+					],
+					"9": [
+						9,
+						1,
+						0
+					]
+				},
+				"Hydrosphere": [
+					2,
+					6,
+					-2
+				],
+				"Chemistry": [
+					1,
+					6,
+					0
+				],
+				"Chemistry_results": {
+					"Water": 4,
+					"Ammonia": 6,
+					"Methane": 8
+				},
+				"Biosphere": [
+					1,
+					0,
+					0
+				],
+				"Bio_results": {
+					"0": [
+						1,
+						0,
+						0
+					],
+					"1": [
+						1,
+						3,
+						0
+					],
+					"2": [
+						2,
+						6,
+						0
+					]
+				}
+			},
+			"Rockball": {
+				"Planet_class": "Rockball",
+				"World_type": "Barren",
+				"Absorption": 0.94,
+				"Greenhouse": 0,
+				"Atmosphere": [
+					1,
+					0,
+					0
+				],
+				"Hydrosphere": [
+					2,
+					6,
+					-11
+				],
+				"Chemistry": [
+					1,
+					0,
+					0
+				],
+				"Biosphere": [
+					1,
+					0,
+					0
+				]
+			},
+			"Rockball (Moonlet)": {
+				"Planet_class": "Rockball",
+				"World_type": "Barren",
+				"Size_Sides": 4,
+				"Absorption": 0.94,
+				"Greenhouse": 0,
+				"Atmosphere": [
+					1,
+					0,
+					0
+				],
+				"Hydrosphere": [
+					2,
+					6,
+					-11
+				],
+				"Chemistry": [
+					1,
+					0,
+					0
+				],
+				"Biosphere": [
+					1,
+					0,
+					0
+				]
+			},
+			"Snowball": {
+				"Planet_class": "Snowball",
+				"World_type": "Barren",
+				"Absorption": 0.93,
+				"Greenhouse": 0.1,
+				"Atmosphere": [
+					1,
+					6,
+					0
+				],
+				"Atmosphere_results": {
+					"0": [
+						1,
+						1,
+						0
+					],
+					"1": [
+						5,
+						1,
+						0
+					]
+				},
+				"Hydrosphere": [
+					10,
+					1,
+					0
+				],
+				"Chemistry": [
+					1,
+					6,
+					0
+				],
+				"Chemistry_results": {
+					"Water": 4,
+					"Ammonia": 6,
+					"Methane": 8
+				},
+				"Biosphere": [
+					1,
+					6,
+					0
+				],
+				"Biosphere_results": {
+					"0": [
+						1,
+						0,
+						0
+					],
+					"1": [
+						1,
+						6,
+						-3
+					],
+					"2": [
+						1,
+						6,
+						-2
+					]
+				}
+			},
+			"Snowball (Moonlet)": {
+				"Planet_class": "Snowball",
+				"World_type": "Barren",
+				"Size_Sides": 4,
+				"Absorption": 0.93,
+				"Greenhouse": 0.1,
+				"Atmosphere": [
+					1,
+					3,
+					0
+				],
+				"Atmosphere_results": {
+					"0": [
+						1,
+						1,
+						0
+					],
+					"1": [
+						5,
+						1,
+						0
+					]
+				},
+				"Hydrosphere": [
+					10,
+					1,
+					0
+				],
+				"Chemistry": [
+					1,
+					6,
+					0
+				],
+				"Chemistry_results": {
+					"Water": 4,
+					"Ammonia": 6,
+					"Methane": 8
+				},
+				"Biosphere": [
+					1,
+					3,
+					0
+				],
+				"Biosphere_results": {
+					"0": [
+						1,
+						0,
+						0
+					],
+					"1": [
+						1,
+						6,
+						-3
+					],
+					"2": [
+						1,
+						6,
+						-2
+					]
+				}
+			},
+			"Telluric": {
+				"Planet_class": "Telluric",
+				"World_type": "Hostile",
+				"Absorption": 0.67,
+				"Greenhouse": 0,
+				"Size_Sides": 6,
+				"Size_Mod": 4,
+				"Atmosphere": [
+					12,
+					1,
+					0
+				],
+				"Hydrosphere": [
+					1,
+					6,
+					0
+				],
+				"Hydro_results": {
+					"0": [
+						4,
+						1,
+						0
+					],
+					"1": [
+						4,
+						1,
+						0
+					],
+					"2": [
+						4,
+						1,
+						0
+					],
+					"3": [
+						4,
+						1,
+						0
+					],
+					"4": [
+						4,
+						1,
+						0
+					],
+					"5": [
+						4,
+						1,
+						0
+					],
+					"6": [
+						4,
+						1,
+						0
+					],
+					"7": [
+						4,
+						1,
+						0
+					],
+					"8": [
+						4,
+						1,
+						0
+					],
+					"9": [
+						4,
+						1,
+						0
+					],
+					"10": [
+						4,
+						1,
+						0
+					],
+					"11": [
+						4,
+						1,
+						0
+					],
+					"12": [
+						4,
+						1,
+						0
+					],
+					"13": [
+						4,
+						1,
+						0
+					],
+					"14": [
+						4,
+						1,
+						0
+					],
+					"15": [
+						6,
+						1,
+						0
+					]
+				},
+				"Chemistry": [
+					1,
+					0,
+					0
+				],
+				"Biosphere": [
+					1,
+					0,
+					0
+				]
+			},
+			"Vesperian": {
+				"Planet_class": "Vesperian",
+				"World_type": "Barren",
+				"Absorption": 0.77,
+				"Greenhouse": 2,
+				"Size_Mod": 4,
+				"Atmosphere": [
+					2,
+					6,
+					-7
+				],
+				"Atmosphere_results": {
+					"0": [
+						1,
+						0,
+						0
+					],
+					"1": [
+						1,
+						0,
+						0
+					],
+					"2": [
+						1,
+						0,
+						0
+					],
+					"3": [
+						3,
+						1,
+						0
+					],
+					"4": [
+						4,
+						1,
+						0
+					],
+					"5": [
+						5,
+						1,
+						0
+					],
+					"6": [
+						6,
+						1,
+						0
+					],
+					"7": [
+						7,
+						1,
+						0
+					],
+					"8": [
+						8,
+						1,
+						0
+					],
+					"9": [
+						9,
+						1,
+						0
+					]
+				},
+				"Hydrosphere": [
+					2,
+					6,
+					-2
+				],
+				"Chemistry": [
+					2,
+					6,
+					0
+				],
+				"Chemistry_results": {
+					"Water": 10,
+					"Chlorine": 12
+				},
+				"Biosphere": [
+					1,
+					0,
+					0
+				],
+				"Bio_results": {
+					"0": [
+						1,
+						0,
+						0
+					],
+					"1": [
+						1,
+						3,
+						0
+					],
+					"2": [
+						2,
+						6,
+						0
+					]
+				}
+			}
+		},
+		"CHEM_MOD": {
+			"None": 0,
+			"Water": 0,
+			"Sulfur": 0,
+			"Chlorine": 0,
+			"Ammonia": 1,
+			"Methane": 3
+		},
+		"CORETYPE": {
+			"Tiny": {
+				"epistellar": "Iron1",
+				"inner": "Iron1",
+				"outer": "Icy"
+			},
+			"Small": {
+				"epistellar": "Iron1",
+				"inner": "Iron1",
+				"outer": "Icy"
+			},
+			"Standard": {
+				"epistellar": "Iron1",
+				"inner": "Iron1",
+				"outer": "Icy"
+			},
+			"Large": {
+				"epistellar": "Iron2",
+				"inner": "Iron2",
+				"outer": "Iron1"
+			},
+			"Giant": {
+				"epistellar": "Iron2",
+				"inner": "Gas1",
+				"outer": "Gas2"
+			},
+			"Super-Giant": {
+				"epistellar": "Gas1",
+				"inner": "Gas2",
+				"outer": "Gas3"
+			}
+		},
+		"CORE_DENSITY": {
+			"Icy": {
+				"0.3": 6,
+				"0.4": 10,
+				"0.5": 14,
+				"0.6": 17,
+				"0.7": 18
+			},
+			"Iron1": {
+				"1": 18,
+				"0.6": 6,
+				"0.7": 10,
+				"0.8": 14,
+				"0.9": 17
+			},
+			"Iron2": {
+				"1": 14,
+				"0.8": 6,
+				"0.9": 10,
+				"1.1": 17,
+				"1.2": 18
+			},
+			"Gas1": {
+				"0.42": 8,
+				"0.26": 10,
+				"0.22": 11,
+				"0.19": 12,
+				"0.17": 18
+			},
+			"Gas2": {
+				"0.18": 8,
+				"0.19": 10,
+				"0.2": 11,
+				"0.22": 12,
+				"0.24": 13,
+				"0.25": 14,
+				"0.26": 15,
+				"0.27": 16,
+				"0.29": 18
+			},
+			"Gas3": {
+				"1": 14,
+				"0.31": 8,
+				"0.35": 10,
+				"0.4": 11,
+				"0.6": 12,
+				"0.8": 13,
+				"1.2": 15,
+				"1.4": 16,
+				"1.6": 18
+			}
+		},
+		"AXIAL_TILT": {
+			"0": 6,
+			"10": 9,
+			"20": 12,
+			"30": 14,
+			"40": 16,
+			"50": 20,
+			"60": 24,
+			"70": 25,
+			"80": 26
+		},
+		"TIDAL_ADJUST": {
+			"Trace": {
+				"Day": 1.2,
+				"Night": 0.1,
+				"Final_Atmo": 0,
+				"Hydro_Penalty": -100
+			},
+			"Very Thin": {
+				"Day": 1.2,
+				"Night": 0.1,
+				"Final_Atmo": 1,
+				"Hydro_Penalty": -100
+			},
+			"Thin": {
+				"Day": 1.16,
+				"Night": 0.67,
+				"Hydro_Penalty": -50
+			},
+			"Standard": {
+				"Day": 1.12,
+				"Night": 0.8,
+				"Hydro_Penalty": -25
+			},
+			"Dense": {
+				"Day": 1.09,
+				"Night": 0.88,
+				"Hydro_Penalty": -10
+			},
+			"Very Dense": {
+				"Day": 1.05,
+				"Night": 0.95,
+				"Hydro_Penalty": 0
+			},
+			"Superdense": {
+				"Day": 1,
+				"Night": 1,
+				"Hydro_Penalty": 0
+			}
+		},
+		"VOLCANIC_ACTIVITY": {
+			"None": 16,
+			"Light": 20,
+			"Moderate": 26,
+			"Heavy": 70,
+			"Extreme": 500
+		},
+		"TECTONIC_ACTIVITY": {
+			"None": 6,
+			"Light": 10,
+			"Moderate": 14,
+			"Heavy": 18,
+			"Extreme": 300
+		},
+		"WORLD_RESOURCES": {
+			"0": 13,
+			"1": 16,
+			"2": 18,
+			"3": 20,
+			"-3": 2,
+			"-2": 4,
+			"-1": 7
+		}
+	},
+	"POPULATION": {
+		"TECH_LEVEL": {
+			"8": 4,
+			"9": 5,
+			"10": 7,
+			"11": 11,
+			"12": 15,
+			"13": 16,
+			"14": 17,
+			"15": 18,
+			"16": 19
+		},
+		"CARRYING_CAPACITY": {
+			"1e4": 0,
+			"1e5": 1,
+			"5e5": 2,
+			"6e5": 3,
+			"7e5": 4,
+			"2.5e6": 5,
+			"5e6": 6,
+			"7.5e6": 7,
+			"1e7": 8,
+			"1.5e7": 9,
+			"2e7": 10,
+			"2.5e7": 11,
+			"3e7": 12,
+			"4e7": 13,
+			"5e7": 14,
+			"6e7": 15,
+			"7e7": 16
+		},
+		"AFFINITY": {
+			"1": 0,
+			"2": 1,
+			"4": 2,
+			"8": 3,
+			"15": 4,
+			"30": 5,
+			"60": 6,
+			"130": 7,
+			"250": 8,
+			"500": 9,
+			"0.03": -5,
+			"0.06": -4,
+			"0.13": -3,
+			"0.25": -2,
+			"0.5": -1
+		},
+		"UNITY": {
+			"Diffuse": 5,
+			"Factionalized": 6,
+			"Coalition": 7,
+			"Opposed World Government": 8,
+			"World Government": 16
+		},
+		"GOVERNMENTS": {
+			"Clan": 6,
+			"Corporation": 15,
+			"Participating Democracy": 16,
+			"Republican Democracy": 17,
+			"Social Democracy": 18,
+			"Technocracy": 20,
+			"Bureaucracy": 24,
+			"Aristocracy": 25,
+			"Oligarchy": 26,
+			"Dictatorship": 27,
+			"Theocracy": 28
+		},
+		"VARIANT": {
+			"": 11,
+			"Particratic ": 13,
+			"Stratocratic": 15,
+			"Patriarchic ": 16,
+			"Matriarchic ": 18
+		},
+		"INCOME": {
+			"7500": 0,
+			"7800": 1,
+			"8100": 2,
+			"8400": 3,
+			"9600": 4,
+			"13000": 5,
+			"19000": 6,
+			"25000": 7,
+			"31000": 8,
+			"43000": 9,
+			"67000": 10,
+			"97000": 11,
+			"130000": 12,
+			"190000": 13,
+			"250000": 14,
+			"310000": 15,
+			"430000": 16
+		},
+		"AFF_MOD": {
+			"0.7": 0,
+			"0.8": 3,
+			"0.9": 6,
+			"1.0": 8,
+			"1.2": 9,
+			"1.4": 10
+		},
+		"POP_MOD": {
+			"1": 12,
+			"0.8": 4,
+			"0.9": 5
+		},
+		"TRADE_LEVEL": {
+			"0": 7500,
+			"1": 7800,
+			"2": 8100,
+			"3": 8400,
+			"4": 9600,
+			"5": 13000,
+			"6": 19000,
+			"7": 25000,
+			"8": 31000,
+			"9": 43000,
+			"10": 67000,
+			"11": 97000,
+			"12": 130000,
+			"13": 190000,
+			"14": 250000,
+			"15": 310000,
+			"16": 430000
+		},
+		"BELT_OUTPOST_TYPE": {
+			"Pirate Base": 3,
+			"Rebel Base": 4,
+			"Corporate Mining Colony": 6,
+			"Independent Mining Colony": 9,
+			"Refugee Camp": 11,
+			"Mercenary Base": 12
+		},
+		"OUTPOST_INDEX": {
+			"Pirate Base": 3,
+			"Rebel Base": 4,
+			"Separatist Enclave": 5,
+			"Black Market": 6,
+			"Espionage Facility": 7,
+			"Corporate Headquarters": 9,
+			"Government Research Station": 10,
+			"Independent Research Station": 11,
+			"Naval Base": 12,
+			"Prison": 14,
+			"Patrol Base": 15,
+			"Independent Mining Outpost": 16,
+			"Refugee Camp": 17,
+			"Mercenary Base": 18
+		},
+		"STATION_INDEX": {
+			"Platform": {
+				"Transfer Station": 18
+			},
+			" Station": {
+				"Government Research Station": 5,
+				"Independent Research Station": 8,
+				"Residential Annex": 11,
+				"Naval Base": 13,
+				"Patrol Base": 16,
+				"Industrial Park": 18
+			},
+			"-Station": {
+				"City-Station": 18
+			}
+		},
+		"BIOSPHERE_LEVEL": {
+			"building blocks (amino acids)": 1,
+			"single-celled organisms": 2,
+			"producers": 3,
+			"multi-cellular organisms": 4,
+			"complex single-celled life": 5,
+			"complex multi-cellular life": 6,
+			"small macroscopic life": 7,
+			"large macroscopic life": 8,
+			"simple global ecology": 9,
+			"complex global ecology": 10,
+			"proto-sapience": 11,
+			"full sapience": 12,
+			"trans-sapience": 13
+		}
+	},
+	"ANOMALIES": {
+		"ANOMALIES": {
+			"Massive Star": 3,
+			"Brown Dwarf": 6,
+			"Rogue World": 9,
+			"JMBO": 11,
+			"Interstellar Comet": 13,
+			"Deep Space Station": 15,
+			"Stellar Remnant": 16,
+			"Neutron Star": 17,
+			"Black Hole": 18
+		},
+		"STELLAR_REMNANT": {
+			"TYPE": {
+				"3": "White Dwarf",
+				"15": "Planetary Nebula"
+			},
+			"WHITE_DWARF": {
+				"MASS": {
+					"0.4": 3,
+					"0.6": 10,
+					"0.8": 16,
+					"1.2": 18
+				},
+				"TEMPERATURE": {
+					"5000": 3,
+					"10000": 8,
+					"20000": 13,
+					"50000": 17,
+					"100000": 18
+				}
+			},
+			"PLANETARY_NEBULA": {
+				"SIZE": {
+					"0.01": 3,
+					"0.05": 8,
+					"0.1": 13,
+					"0.2": 17,
+					"0.5": 18
+				},
+				"AGE": {
+					"1000": 3,
+					"5000": 8,
+					"10000": 13,
+					"20000": 17,
+					"50000": 18
+				},
+				"SHAPE": {
+					"Spherical": 3,
+					"Elliptical": 8,
+					"Bipolar": 13,
+					"Irregular": 17,
+					"Ring": 18
+				},
+				"CENTRAL_STAR_TEMPERATURE": {
+					"25000": 3,
+					"50000": 8,
+					"100000": 13,
+					"150000": 17,
+					"200000": 18
+				},
+				"EXPANSION_VELOCITY": {
+					"10": 3,
+					"20": 8,
+					"30": 13,
+					"40": 17,
+					"50": 18
+				}
+			},
+			"MAGNETAR": {
+				"MAGNETIC_FIELD": {
+					"1e13": 3,
+					"1e14": 8,
+					"1e15": 13,
+					"1e16": 17,
+					"1e17": 18
+				},
+				"ROTATION_PERIOD": {
+					"0.1": 3,
+					"1.0": 8,
+					"5.0": 13,
+					"10.0": 17,
+					"20.0": 18
+				}
+			}
+		}
+	}
+}

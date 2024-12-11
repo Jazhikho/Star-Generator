@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://dtv76q4hasx6k"]
+
+[ext_resource type="Script" path="res://SystemView/system_view.gd" id="1_l26f6"]
+[ext_resource type="Script" path="res://script/camera_3d.gd" id="2_cqrpr"]
+
+[node name="SystemView" type="Node3D"]
+script = ExtResource("1_l26f6")
+
+[node name="CameraRig" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.707107, 0.707107, 0, -0.707107, 0.707107, 0, 50, 50)
+
+[node name="Camera3D" type="Camera3D" parent="CameraRig"]
+script = ExtResource("2_cqrpr")
