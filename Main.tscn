@@ -1,0 +1,30 @@
+[gd_scene load_steps=3 format=3 uid="uid://e1h6c0vjcquv"]
+
+[ext_resource type="Script" path="res://assets/global/main.gd" id="1_a2gs7"]
+[ext_resource type="PackedScene" uid="uid://b4b0wyorar4vw" path="res://scenes/UI/UIController.tscn" id="2_t00du"]
+
+[node name="Main" type="Node"]
+script = ExtResource("1_a2gs7")
+
+[node name="ViewContainer" type="SubViewportContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 34.0
+offset_bottom = -37.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SubViewport" type="SubViewport" parent="ViewContainer"]
+handle_input_locally = false
+render_target_update_mode = 4
+
+[node name="CurrentView" type="ColorRect" parent="ViewContainer/SubViewport"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(1, 1, 1, 0)
+
+[node name="UiController" parent="." instance=ExtResource("2_t00du")]

@@ -252,3 +252,6 @@ func _on_camera_zoom_changed(zoom_factor: float):
 		updated_star_list.append(star)
 	
 	stars.set_star_list(updated_star_list)
+
+func to_main_menu():
+	get_node("/root/Main/UI").to_main_menu()

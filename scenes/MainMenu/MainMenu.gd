@@ -133,12 +133,7 @@ func _on_load_button_pressed():
 	open_load_slot_panel()
 
 func _transition_to_galaxy_view():
-	if !is_instance_valid(self) or !is_inside_tree():
-		push_error("Cannot transition: MainMenu is no longer valid")
-		return
-	
-	get_tree().call_deferred("change_scene_to_file", "res://scenes/GalaxyView/galaxy_view.tscn")
-
+	get_node("/root/Main/UI").to_galaxy_view()
 
 func open_settings_panel():
 	settings_panel.visible = true
