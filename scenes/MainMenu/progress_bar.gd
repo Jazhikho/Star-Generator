@@ -50,10 +50,15 @@ func complete_progress():
 	load_button.disabled = false
 
 func _on_save_button_pressed():
-	save_requested.emit()
+	emit_signal("save_requested")
 
 func _on_load_button_pressed():
-	load_requested.emit()
+	emit_signal("load_requested")
 
 func _on_close_requested():
+	var bridge = get_tree().get_root().get_node_or_null("MainMenu/CSBridge")
+	if is_instance_valid(bridge):
+		bridge.CancelGeneration()
+	# Notify parent that window is closing
+	get_parent().progress_window = null
 	queue_free()

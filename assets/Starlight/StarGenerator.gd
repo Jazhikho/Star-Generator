@@ -1,5 +1,5 @@
 @tool
-extends "res://Resources/Starlight/StarManager.gd"
+extends "res://assets/Starlight/StarManager.gd"
 ## Procedurally generates main sequence stars and populates StarManager with them.
 
 ## Radius of a sphere in which to place stars.
@@ -73,7 +73,7 @@ class StarClass:
 		var p = self.sample(value)
 		# B and O-class stars are obscenely bright, so spawn them further away than other stars.
 		star_position *= max(1.0, p.luminosity / 400)
-		return Star.new(star_position, p.luminosity, p.temp)
+		return GalaxyStar.new(star_position, p.luminosity, p.temp)
 
 
 var class_O = StarClass.new({
@@ -174,7 +174,7 @@ func _process(delta):
 	var rng = RandomNumberGenerator.new()
 	rng.seed = rng_seed
 
-	var stars: Array[Star] = []
+	var stars: Array[GalaxyStar] = []
 
 	if generate_at_origin:
 		stars.push_back(class_G.get_star(Vector3.ZERO, 0.5))

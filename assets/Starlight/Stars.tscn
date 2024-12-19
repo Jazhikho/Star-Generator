@@ -1,8 +1,8 @@
 [gd_scene load_steps=4 format=3 uid="uid://b0nt4n13a6448"]
 
-[ext_resource type="Script" path="res://Resources/Starlight/StarManager.gd" id="1_u877o"]
-[ext_resource type="Shader" path="res://Resources/Starlight/Star.gdshader" id="2_6rhhm"]
-[ext_resource type="Texture2D" uid="uid://cweg0rded3pvf" path="res://Resources/Starlight/psf-textures/jwst.exr" id="3_wqe40"]
+[ext_resource type="Script" path="res://assets/Starlight/StarManager.gd" id="1_u877o"]
+[ext_resource type="Shader" path="res://assets/Starlight/Star.gdshader" id="2_6rhhm"]
+[ext_resource type="Texture2D" uid="uid://cweg0rded3pvf" path="res://assets/Starlight/psf-textures/jwst.exr" id="3_wqe40"]
 
 [node name="Stars" type="Node3D"]
 script = ExtResource("1_u877o")

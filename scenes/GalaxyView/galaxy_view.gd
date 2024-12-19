@@ -1,8 +1,17 @@
 extends Node3D
 
+@onready var system_view_scene = preload("res://scenes/SystemView/system_view.tscn")
+var current_view : Node3D
+var galaxy_view : Node3D
+var system_view : Node3D
+
+@export var min_scale: float = 0.1
+@export var max_scale: float = 5.0
+@export var zoom_speed: float = 0.1
+
 @onready var camera: Camera3D = $Camera3D
-@onready var stars = $Stars  # Reference to the Stars scene instance
-var star_data_map = {}  # Maps position to star data
+@onready var stars = $StarManager
+var star_data_map = {}
 const DOUBLE_CLICK_TIME = 0.3
 var last_click_time = 0.0
 var double_click_timer
@@ -10,25 +19,26 @@ var last_clicked_star
 var ray_length = 1000
 var space_state: PhysicsDirectSpaceState3D
 
+var current_scale: float = 1.0
+
 func _ready():
+	current_view = galaxy_view
 	space_state = get_world_3d().direct_space_state
 	
 	var pars = GlobalSettings.galaxy_settings.parsecs
 	var cam_x = GlobalSettings.galaxy_settings.x_sector * pars / 2
 	var cam_y = GlobalSettings.galaxy_settings.y_sector * pars / 2
 	var cam_z = GlobalSettings.galaxy_settings.z_sector * pars / 2
-	# Set up camera
 	camera.position = Vector3(0, cam_y, cam_z)
 	camera.look_at(Vector3(cam_x, cam_y, cam_z))
+	camera.zoom_changed.connect(_on_camera_zoom_changed)
+	for coords in star_data_map:
+		star_data_map[coords]["original_position"] = coords
 	
 	double_click_timer = Timer.new()
 	double_click_timer.one_shot = true
 	double_click_timer.wait_time = 0.3
 	add_child(double_click_timer)
-
-	# Debug camera settings
-	for child in get_children():
-		print("Child node: ", child.name, " of type: ", child.get_class())
 
 	setup_stars()
 	setup_collision_system()
@@ -37,27 +47,28 @@ func setup_stars():
 	print("Setting up stars...")
 	var star_list = []
 	
-	for star_data in GlobalData.galaxy_data:
-		if not star_data.has("coordinates") or not star_data.has("luminosity") or not star_data.has("temperature"):
-			print("Missing required star data fields")
-			continue
+	# Use GlobalData instead of CSBridge
+	if GlobalData.galaxy_data.is_empty():
+		print("No galaxy data found in GlobalData")
+		return
 		
-		var coords = Vector3(star_data["coordinates"][0], star_data["coordinates"][1], star_data["coordinates"][2])
-		var luminosity = star_data["luminosity"]  # Scale up luminosity
-		var temperature = star_data["temperature"]
+	for star_id in GlobalData.galaxy_data:
+		var star_info = GlobalData.galaxy_data[star_id]
+		var coords = star_info["coordinates"]
+		var luminosity = star_info["luminosity"]
+		var temperature = star_info["temperature"]
 		
-		#print(f"Creating star at {coords} with luminosity {luminosity} and temperature {temperature}")
-		
-		var star = stars.Star.new(coords, luminosity, temperature)
+		var star = stars.GalaxyStar.new(coords, luminosity, temperature)
 		star_list.append(star)
-		star_data_map[coords] = star_data
+		star_data_map[coords] = star_info
+		star_data_map[coords]["original_position"] = coords
 	
 	print("Total stars to render: ", star_list.size())
 	stars.set_star_list(star_list)
 
 func setup_collision_system():
 	# Create collision spheres for each star
-	for star_position in star_data_map:
+	for coords in star_data_map:
 		var collision_sphere = Area3D.new()
 		var collision_shape = CollisionShape3D.new()
 		var sphere_shape = SphereShape3D.new()
@@ -66,11 +77,11 @@ func setup_collision_system():
 		collision_shape.shape = sphere_shape
 		
 		collision_sphere.add_child(collision_shape)
-		collision_sphere.position = star_position
+		collision_sphere.position = coords
 		collision_sphere.collision_layer = 1
 		collision_sphere.collision_mask = 1
 		
-		collision_sphere.set_meta("star_data", star_data_map[star_position])
+		collision_sphere.set_meta("star_data", star_data_map[coords])
 		collision_sphere.input_event.connect(_on_star_input_event.bind(collision_sphere))
 		
 		add_child(collision_sphere)
@@ -108,26 +119,49 @@ func _input(event):
 				
 func _on_star_double_clicked(star_data: Dictionary):
 	print("Double-clicked star: ", star_data.id)
-	if star_data.data.has("system_data") and not star_data.data.system_data.is_empty():
-		transition_to_system_view(star_data)
 	
-func transition_to_system_view(star_data: Dictionary):
-	# Create a ColorRect for transition effect
-	var transition_rect = ColorRect.new()
-	transition_rect.color = Color(0, 0, 0, 0)  # Start fully transparent
-	transition_rect.set_anchors_preset(Control.PRESET_FULL_RECT)
-	add_child(transition_rect)
+	if GlobalData.systems_data.has(star_data.id):
+		var system_info = GlobalData.systems_data[star_data.id]
+		get_parent().to_system_view(system_info.data)
+		
+		#print("System Information:")
+		#print(system_info.data)
+		#transition_to_system_view(system_info.data)
+		
+func transition_to_system_view(system_data: Array):
+	galaxy_view.visible = false
 	
-	# Fade to black
+	# Create and add system view
+	system_view = system_view_scene.instantiate()
+	add_child(system_view)
+	current_view = system_view
+	
+	# Set system data and create the system
+	system_view.system_data = system_data
+	system_view.create_system()
+	
+	# Tween camera
+	var camera = $Camera3D
 	var tween = create_tween()
-	tween.tween_property(transition_rect, "color", Color(0, 0, 0, 1), 1.0)
-	await tween.finished
+	tween.tween_property(camera, "position", Vector3(0, 50, 100), 1.0).set_trans(Tween.TRANS_CUBIC)
+	tween.parallel().tween_property(camera, "rotation", Vector3(-PI/6, 0, 0), 1.0).set_trans(Tween.TRANS_CUBIC)
+
+func transition_to_galaxy_view():
+	# Remove system view
+	if system_view:
+		remove_child(system_view)
+		system_view.queue_free()
+		system_view = null
 	
-	# Set up the system data for the next scene
-	Global.current_system_data = star_data.data.system_data
+	# Show galaxy view
+	galaxy_view.visible = true
+	current_view = galaxy_view
 	
-	# Change to the system_view scene
-	get_tree().change_scene_to_file("res://scenes/system_view.tscn")
+	# Tween camera back
+	var camera = $Camera3D
+	var tween = create_tween()
+	tween.tween_property(camera, "position", Vector3(0, 0, 100), 1.0).set_trans(Tween.TRANS_CUBIC)
+	tween.parallel().tween_property(camera, "rotation", Vector3.ZERO, 1.0).set_trans(Tween.TRANS_CUBIC)
 
 func _on_star_mouse_entered(star_area: Area3D):
 	var star_data = star_area.get_meta("star_data")
@@ -140,6 +174,7 @@ func _on_star_mouse_exited(star_area: Area3D):
 
 func _on_star_clicked(star_data: Dictionary):
 	print("Clicked star: ", star_data.id)  # Debug print
+	camera.set_orbit_target(star_data.coordinates)
 	if double_click_timer.is_stopped():
 		double_click_timer.start()
 		last_clicked_star = star_data
@@ -197,3 +232,23 @@ func raycast_from_mouse(mouse_pos):
 	var to = from + camera.project_ray_normal(mouse_pos) * ray_length
 	var query = PhysicsRayQueryParameters3D.create(from, to)
 	return space_state.intersect_ray(query)
+
+func _on_camera_zoom_changed(zoom_factor: float):
+	# Update collision spheres
+	for child in get_children():
+		if child is Area3D and child.has_meta("star_data"):
+			var original_position = child.get_meta("star_data")["original_position"]
+			child.position = original_position * zoom_factor
+	
+	# Update visual stars
+	var updated_star_list = []
+	for star_id in star_data_map:
+		var star_info = star_data_map[star_id]
+		var scaled_coords = star_info["original_position"] * zoom_factor
+		var luminosity = star_info["luminosity"]
+		var temperature = star_info["temperature"]
+		
+		var star = stars.GalaxyStar.new(scaled_coords, luminosity, temperature)
+		updated_star_list.append(star)
+	
+	stars.set_star_list(updated_star_list)

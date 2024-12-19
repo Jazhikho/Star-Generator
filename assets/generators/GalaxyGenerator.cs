@@ -1,18 +1,16 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Generator;
 
 public class GalaxyGenerator
 {
-	public event Action<float, string> GenerationProgress;
-	public event Action GenerationCompleted;
+	private GlobalData globalData;
 	private int totalParsecs;
 	private int systemCount;
-	//private int anomalyCount;
-	private GlobalData globalData;
-
+	private float progress;
 	private int xSectors;
 	private int ySectors;
 	private int zSectors;
@@ -25,9 +23,10 @@ public class GalaxyGenerator
 		this.globalData = globalData;
 	}
 
-	public void GenerateGalaxy(int _x, int _y, int _z, int _parsecs, float _system, float _anomaly)
+	public void GenerateGalaxy(int _x, int _y, int _z, int _parsecs, float _system, float _anomaly, 
+		Action<float, string> progressCallback, CancellationToken cancellationToken)
 	{
-		Console.WriteLine("Starting galaxy generation");
+		//GD.Print("Starting galaxy generation");
 		globalData.ResetData();
 
 		xSectors = _x;
@@ -44,63 +43,52 @@ public class GalaxyGenerator
 		var random = new Random();
 
 		for (int x = 0; x < xSectors; x++)
-		for (int y = 0; y < ySectors; y++)
-		for (int z = 0; z < zSectors; z++)
-		{
-			string sectorKey = Utils.SetKey(x, y, z);
-			Console.WriteLine($"Processing sector {sectorKey}");
-			
-			for (int px = 0; px < parsecsPerSector; px++)
-			for (int py = 0; py < parsecsPerSector; py++)
-			for (int pz = 0; pz < parsecsPerSector; pz++)
 			{
-				processedParsecs++;
+			cancellationToken.ThrowIfCancellationRequested();
+			for (int y = 0; y < ySectors; y++)
+			for (int z = 0; z < zSectors; z++)
+			{
+				if (cancellationToken.IsCancellationRequested)
+				return;
+				string sectorKey = Utils.SetKey(x, y, z);
 				
-				string parsecKey = Utils.SetKey(px, py, pz);
-				string id = $"{sectorKey}-{parsecKey}";
-				
-				if (random.NextDouble() * 100 < systemChance)
+				for (int px = 0; px < parsecsPerSector; px++)
+				for (int py = 0; py < parsecsPerSector; py++)
+				for (int pz = 0; pz < parsecsPerSector; pz++)
 				{
-					Console.WriteLine($"System at {id}");
-					var systemGenerator = new SystemGenerator();
-					if (systemGenerator.Stars.Count > 0)
+					processedParsecs++;
+					
+					string parsecKey = Utils.SetKey(px, py, pz);
+					string id = $"{sectorKey}-{parsecKey}";
+					
+					if (random.NextDouble() * 100 < systemChance)
 					{
-						Console.WriteLine($"System generated with {systemGenerator.Stars.Count} stars");
-						globalData.AddSystem(sectorKey, parsecKey, id, systemGenerator.Stars);
-						globalData.AddGalaxyData(
-							x * parsecsPerSector + px,
-							y * parsecsPerSector + py,
-							z * parsecsPerSector + pz,
-							id,
-							systemGenerator.Stars
-						);
-						systemCount++;
-					}
-					else
-					{
-						Console.WriteLine("System generation failed - no stars created");
+						var systemGenerator = new SystemGenerator();
+						if (systemGenerator.Stars.Count > 0)
+						{
+							globalData.AddSystem(sectorKey, parsecKey, id, systemGenerator.Stars);
+
+							float offsetX = (float)(random.NextDouble() * 0.6 - 0.3);
+							float offsetY = (float)(random.NextDouble() * 0.6 - 0.3);
+							float offsetZ = (float)(random.NextDouble() * 0.6 - 0.3);
+
+							globalData.AddGalaxyData(
+								x * parsecsPerSector + px + offsetX,
+								y * parsecsPerSector + py + offsetY,
+								z * parsecsPerSector + pz + offsetZ,
+								id,
+								systemGenerator.Stars
+							);
+							systemCount++;
+						}
 					}
 				}
-				
-				if (processedParsecs % 100 == 0 || processedParsecs == totalParsecs)
-				{
-					float progress = (float)processedParsecs / totalParsecs;
-					Console.WriteLine($"Progress: {progress:P2} ({processedParsecs}/{totalParsecs} parsecs, {systemCount} systems)");
-					GenerationProgress?.Invoke(progress, 
-						$"Generating parsec {processedParsecs}/{totalParsecs}");
-				}
+				progress = (float)processedParsecs / totalParsecs;
+				progressCallback(progress, $"Generating parsec {processedParsecs}/{totalParsecs}");
 			}
+			progress = (float)processedParsecs / totalParsecs;
+			progressCallback(progress, $"Processing data...");
 		}
-
-		Console.WriteLine($"Generation complete. Processed {processedParsecs} parsecs, generated {systemCount} systems");
-		FinishGeneration();
-		GenerationCompleted?.Invoke();
-	}
-
-	private void FinishGeneration()
-	{
-	//	Console.WriteLine($"Systems: {systemCount}, Anomalies: {anomalyCount}");
-		Console.WriteLine($"Galaxy generation complete. Total systems: {systemCount}");
-		Console.WriteLine($"Galaxy data structure size: {globalData.GalaxyData.Count}");
+		//GD.Print($"Galaxy generation complete. Total systems: {systemCount}");
 	}
 }

@@ -1,0 +1,48 @@
+[gd_scene load_steps=8 format=3 uid="uid://loksnlsh7qe5"]
+
+[ext_resource type="Script" path="res://assets/models/star/star_model.gd" id="1_mwlxd"]
+[ext_resource type="Shader" path="res://assets/models/star/star_corona.gdshader" id="2_j72qw"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_1q6jr"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dxkbo"]
+albedo_color = Color(0.498039, 0.705882, 1, 1)
+emission_enabled = true
+emission = Color(1, 1, 1, 1)
+emission_operator = 1
+detail_enabled = true
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_uplcg"]
+shader = ExtResource("2_j72qw")
+shader_parameter/star_color = null
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_bmfjm"]
+shader = ExtResource("2_j72qw")
+shader_parameter/star_color = null
+
+[sub_resource type="Curve3D" id="Curve3D_1frdt"]
+
+[node name="StarModel" type="Node3D"]
+script = ExtResource("1_mwlxd")
+
+[node name="CoreMesh" type="MeshInstance3D" parent="."]
+mesh = SubResource("SphereMesh_1q6jr")
+surface_material_override/0 = SubResource("StandardMaterial3D_dxkbo")
+
+[node name="CoronaParticles" type="GPUParticles3D" parent="."]
+material_override = SubResource("ShaderMaterial_uplcg")
+material_overlay = SubResource("ShaderMaterial_bmfjm")
+sub_emitter = NodePath(".")
+
+[node name="FlareMesh" type="MeshInstance3D" parent="."]
+mesh = SubResource("SphereMesh_1q6jr")
+surface_material_override/0 = SubResource("StandardMaterial3D_dxkbo")
+
+[node name="OrbitPath" type="Path3D" parent="."]
+curve = SubResource("Curve3D_1frdt")
+
+[node name="PathFollow3D" type="PathFollow3D" parent="OrbitPath"]
+
+[node name="OrbitalBodies" type="Node3D" parent="."]
+
+[node name="StarData" type="Node" parent="."]

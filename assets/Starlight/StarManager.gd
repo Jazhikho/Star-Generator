@@ -6,7 +6,7 @@ extends Node3D
 
 
 ## Class used to represent stars for StarManager. Passed to set_star_list().
-class Star:
+class GalaxyStar:
 	# Position of the star.
 	var star_position: Vector3
 	# Luminosity of the star, relative to the luminosity of the Sun. (L☉)

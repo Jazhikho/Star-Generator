@@ -1,0 +1,218 @@
+[gd_scene load_steps=4 format=3 uid="uid://cfqmf30bam1vl"]
+
+[ext_resource type="Script" path="res://scenes/MainMenu/MainMenu.gd" id="1_mokhh"]
+[ext_resource type="Script" path="res://scenes/MainMenu/SettingsPanel.gd" id="2_ie3y3"]
+[ext_resource type="PackedScene" uid="uid://dbqmblj77nws5" path="res://scenes/MainMenu/progress_window.tscn" id="3_gjo0t"]
+
+[node name="MainMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -2.0
+offset_bottom = -2.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_mokhh")
+
+[node name="MenuButtons" type="VBoxContainer" parent="."]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 1
+offset_right = 300.0
+offset_bottom = 189.0
+theme_override_constants/separation = 6
+
+[node name="Label" type="Label" parent="MenuButtons"]
+layout_mode = 2
+text = "Menu"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="NewButton" type="Button" parent="MenuButtons"]
+layout_mode = 2
+text = "New"
+
+[node name="SettingsButton" type="Button" parent="MenuButtons"]
+layout_mode = 2
+text = "Settings
+"
+
+[node name="LoadButton" type="Button" parent="MenuButtons"]
+layout_mode = 2
+text = "Load"
+
+[node name="EditButton" type="Button" parent="MenuButtons"]
+layout_mode = 2
+text = "Edit"
+
+[node name="SaveButton" type="Button" parent="MenuButtons"]
+layout_mode = 2
+text = "Save"
+
+[node name="SettingsPanel" type="Control" parent="."]
+custom_minimum_size = Vector2(300, 400)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -150.0
+offset_top = -200.0
+offset_right = 250.0
+offset_bottom = 200.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2_ie3y3")
+
+[node name="MarginContainer" type="MarginContainer" parent="SettingsPanel"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="SettingsPanel/MarginContainer"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="SettingsPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 29
+text = "Galaxy Generation Settings"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="SettingsPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="SectorsContainer" type="VBoxContainer" parent="SettingsPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="SectorsDescription" type="Label" parent="SettingsPanel/MarginContainer/VBoxContainer/SectorsContainer"]
+layout_mode = 2
+text = "Total Sector Area: (Final sector area will be x*y*z)"
+
+[node name="SectorInputs" type="HBoxContainer" parent="SettingsPanel/MarginContainer/VBoxContainer/SectorsContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="XSectorsInput" type="SpinBox" parent="SettingsPanel/MarginContainer/VBoxContainer/SectorsContainer/SectorInputs"]
+layout_mode = 2
+min_value = 1.0
+max_value = 10.0
+value = 3.0
+rounded = true
+alignment = 1
+custom_arrow_step = 1.0
+
+[node name="YSectorsInput" type="SpinBox" parent="SettingsPanel/MarginContainer/VBoxContainer/SectorsContainer/SectorInputs"]
+layout_mode = 2
+min_value = 1.0
+max_value = 10.0
+value = 3.0
+rounded = true
+alignment = 1
+custom_arrow_step = 1.0
+
+[node name="ZSectorsInput" type="SpinBox" parent="SettingsPanel/MarginContainer/VBoxContainer/SectorsContainer/SectorInputs"]
+layout_mode = 2
+min_value = 1.0
+max_value = 10.0
+value = 3.0
+rounded = true
+alignment = 1
+custom_arrow_step = 1.0
+
+[node name="HSeparator2" type="HSeparator" parent="SettingsPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ParsecsContainer" type="VBoxContainer" parent="SettingsPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ParsecInputs" type="HBoxContainer" parent="SettingsPanel/MarginContainer/VBoxContainer/ParsecsContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="ParsecsInput" type="SpinBox" parent="SettingsPanel/MarginContainer/VBoxContainer/ParsecsContainer/ParsecInputs"]
+layout_mode = 2
+min_value = 1.0
+max_value = 10.0
+value = 10.0
+rounded = true
+alignment = 1
+suffix = "^3"
+custom_arrow_step = 1.0
+
+[node name="ParsecsDescription" type="Label" parent="SettingsPanel/MarginContainer/VBoxContainer/ParsecsContainer/ParsecInputs"]
+layout_mode = 2
+text = "Parsecs per sector"
+
+[node name="HSeparator3" type="HSeparator" parent="SettingsPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="SystemChanceContainer" type="VBoxContainer" parent="SettingsPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="SystemChanceInputs" type="HBoxContainer" parent="SettingsPanel/MarginContainer/VBoxContainer/SystemChanceContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="SystemChanceInput" type="SpinBox" parent="SettingsPanel/MarginContainer/VBoxContainer/SystemChanceContainer/SystemChanceInputs"]
+layout_mode = 2
+min_value = 1.0
+step = 0.01
+value = 15.0
+alignment = 1
+suffix = "%"
+custom_arrow_step = 1.0
+
+[node name="SystemChanceDescription" type="Label" parent="SettingsPanel/MarginContainer/VBoxContainer/SystemChanceContainer/SystemChanceInputs"]
+layout_mode = 2
+text = "System Chance"
+
+[node name="SystemChanceDescription2" type="Label" parent="SettingsPanel/MarginContainer/VBoxContainer/SystemChanceContainer"]
+layout_mode = 2
+text = "Note: Default value is set at 15%, but realistic
+(values are closer to 9.37%)"
+horizontal_alignment = 1
+
+[node name="HSeparator4" type="HSeparator" parent="SettingsPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="AnomalyChanceContainer" type="VBoxContainer" parent="SettingsPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="AnomalyChanceInputs" type="HBoxContainer" parent="SettingsPanel/MarginContainer/VBoxContainer/AnomalyChanceContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="AnomalyChanceInput" type="SpinBox" parent="SettingsPanel/MarginContainer/VBoxContainer/AnomalyChanceContainer/AnomalyChanceInputs"]
+layout_mode = 2
+min_value = 1.0
+step = 0.01
+value = 1.0
+alignment = 1
+suffix = "%"
+custom_arrow_step = 1.0
+
+[node name="AnomalyChanceDescription" type="Label" parent="SettingsPanel/MarginContainer/VBoxContainer/AnomalyChanceContainer/AnomalyChanceInputs"]
+layout_mode = 2
+text = "Anamoly Chance
+"
+
+[node name="HSeparator5" type="HSeparator" parent="SettingsPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ConfirmButton" type="Button" parent="SettingsPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Save Settings"
+
+[node name="FileDialog" type="FileDialog" parent="."]
+size = Vector2i(500, 400)
+access = 2
+
+[node name="ProgressWindow" parent="." instance=ExtResource("3_gjo0t")]
+
+[connection signal="pressed" from="MenuButtons/NewButton" to="." method="_on_new_button_pressed"]
+[connection signal="pressed" from="MenuButtons/SettingsButton" to="." method="_on_settings_button_pressed"]
+[connection signal="pressed" from="MenuButtons/LoadButton" to="." method="_on_load_button_pressed"]
+[connection signal="pressed" from="MenuButtons/EditButton" to="." method="_on_edit_button_pressed"]
+[connection signal="pressed" from="MenuButtons/SaveButton" to="." method="_on_save_button_pressed"]
+[connection signal="pressed" from="SettingsPanel/MarginContainer/VBoxContainer/ConfirmButton" to="SettingsPanel" method="_on_confirm_button_pressed"]

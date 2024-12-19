@@ -1,19 +1,35 @@
+using Godot;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
+using System.Text.Json.Serialization;
 using Generator;
 
 public class GlobalData
 {
 	private readonly object _lock = new object();
+	private static GlobalData _instance;
+	public static GlobalData Instance
+	{
+		get
+		{
+			if (_instance == null)
+				_instance = new GlobalData();
+			return _instance;
+		}
+	}
+	
+	[JsonPropertyName("systemsData")]
+	public List<SystemData> SystemsData { get; set; } = new List<SystemData>();
 
-	public List<SystemData> SystemsData { get; private set; } = new List<SystemData>();
-	public List<GalaxyData> GalaxyData { get; private set; } = new List<GalaxyData>();
+	[JsonPropertyName("galaxyData")]
+	public List<GalaxyData> GalaxyData { get; set; } = new List<GalaxyData>();
 
 	public void AddSystem(string sectorKey, string parsecKey, string id, List<StarData> systemData)
 	{
 		lock (_lock)
 		{
+			GD.Print($"Adding system with ID: {id}, Data type: {systemData?.GetType()?.FullName ?? "null"}");
 			SystemsData.Add(new SystemData
 			{
 				Type = "system",
@@ -29,7 +45,7 @@ public class GlobalData
 	{
 		GalaxyData.Add(new GalaxyData
 		{
-			Coordinates = new Vector3(x, y, z),
+			Coordinates = new System.Numerics.Vector3(x, y, z),
 			ID = id, 
 			SystemStars = systemData.Count,
 			Luminosity = systemData[0].Luminosity,
@@ -44,20 +60,38 @@ public class GlobalData
 	}
 }
 
-public struct SystemData
+public class SystemData
 {
-	public string Type;
-	public string SectorKey;
-	public string ParsecKey;
-	public string ID;
-	public object Data;
+	[JsonPropertyName("type")]
+	public string Type { get; set; }
+
+	[JsonPropertyName("sectorKey")]
+	public string SectorKey { get; set; }
+
+	[JsonPropertyName("parsecKey")]
+	public string ParsecKey { get; set; }
+
+	[JsonPropertyName("id")]
+	public string ID { get; set; }
+
+	[JsonPropertyName("data")]
+	public object Data { get; set; }
 }
 
-public struct GalaxyData
+public class GalaxyData
 {
-	public Vector3 Coordinates;
-	public string ID;
-	public int SystemStars;
-	public float Luminosity;
-	public float Temperature;
+	[JsonPropertyName("coordinates")]
+	public System.Numerics.Vector3 Coordinates { get; set; }
+
+	[JsonPropertyName("id")]
+	public string ID { get; set; }
+
+	[JsonPropertyName("systemStars")]
+	public int SystemStars { get; set; }
+
+	[JsonPropertyName("luminosity")]
+	public float Luminosity { get; set; }
+
+	[JsonPropertyName("temperature")]
+	public float Temperature { get; set; }
 }

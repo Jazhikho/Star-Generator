@@ -1,0 +1,25 @@
+[gd_scene load_steps=6 format=3 uid="uid://bmtr8mp74oran"]
+
+[ext_resource type="Script" path="res://Test/test.gd" id="1_xjcyf"]
+[ext_resource type="Texture2D" uid="uid://8f8uyrgil804" path="res://assets/textures/2k_stars.jpg" id="2_dsgx0"]
+
+[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_qxums"]
+panorama = ExtResource("2_dsgx0")
+
+[sub_resource type="Sky" id="Sky_wcc46"]
+sky_material = SubResource("PanoramaSkyMaterial_qxums")
+
+[sub_resource type="Environment" id="Environment_08ycd"]
+sky = SubResource("Sky_wcc46")
+
+[node name="Test" type="Node3D"]
+script = ExtResource("1_xjcyf")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 10)
+
+[node name="Node3D" type="Node3D" parent="."]
+visible = false
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="Node3D"]
+environment = SubResource("Environment_08ycd")

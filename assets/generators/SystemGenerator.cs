@@ -28,7 +28,7 @@ public class SystemGenerator
 	private void GenerateSystem()
 	{
 		int starCount = starArrangement.DetermineStarCount();
-		Console.WriteLine($"Generating {starCount} stars");
+		GD.Print($"Generating {starCount} stars");
 		GenerateStarsData(starCount);
 		Stars = starArrangement.ArrangeStars(Stars, orbitalLimits);
 		GenerateCelestialBodiesData();
@@ -40,10 +40,10 @@ public class SystemGenerator
 		
 		for (int i = 0; i < starCount; i++)
 		{
-			Console.WriteLine($"Creating star {i} of {starCount}");
+			GD.Print($"Creating star {i} of {starCount}");
 			var starGenerator = new StarGenerator(i, massCap);
 			var starData = starGenerator.StarData;
-			Console.WriteLine($"Star Data: {starData}");
+			GD.Print($"Star Data: {starData}");
 			if (starData != null)
 			{
 				Stars.Add(starData);
@@ -65,14 +65,14 @@ public class SystemGenerator
 		{
 			if (star == null)
 			{
-				Console.WriteLine("Encountered a null star in Stars list.");
+				GD.Print("Encountered a null star in Stars list.");
 				continue;
 			}
 
 			var limits = star.OrbitalLimits;
 			if (limits == null)
 			{
-				Console.WriteLine($"OrbitalLimits is null for star: {star.SpectralType}{star.LuminosityClass}");
+				GD.Print($"OrbitalLimits is null for star: {star.SpectralType}{star.LuminosityClass}");
 				continue;
 			}
 
@@ -83,7 +83,7 @@ public class SystemGenerator
 			}
 			catch (Exception e)
 			{
-				Console.WriteLine($"Error generating orbits: {e.Message}");
+				GD.Print($"Error generating orbits: {e.Message}");
 				continue;
 			}
 
@@ -99,7 +99,7 @@ public class SystemGenerator
 				}
 				catch (Exception e)
 				{
-					Console.WriteLine($"Error determining body type: {e.Message}");
+					GD.Print($"Error determining body type: {e.Message}");
 					continue;
 				}
 
@@ -117,7 +117,7 @@ public class SystemGenerator
 						}
 						catch (Exception e)
 						{
-							Console.WriteLine($"Error generating planet: {e.Message}");
+							GD.Print($"Error generating planet: {e.Message}");
 						}
 						break;
 					case "Asteroid Belt":
@@ -128,11 +128,11 @@ public class SystemGenerator
 						}
 						catch (Exception e)
 						{
-							Console.WriteLine($"Error generating asteroid belt: {e.Message}");
+							GD.Print($"Error generating asteroid belt: {e.Message}");
 						}
 						break;
 					default:
-						Console.WriteLine($"Unknown body type: {bodyType}");
+						GD.Print($"Unknown body type: {bodyType}");
 						break;
 				}
 			}

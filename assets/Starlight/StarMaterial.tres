@@ -1,7 +1,7 @@
 [gd_resource type="ShaderMaterial" load_steps=3 format=3 uid="uid://dc40ioj1swhy"]
 
-[ext_resource type="Shader" path="res://Resources/Starlight/Star.gdshader" id="1_vx40u"]
-[ext_resource type="Texture2D" uid="uid://cweg0rded3pvf" path="res://Resources/Starlight/psf-textures/jwst.exr" id="2_y20kl"]
+[ext_resource type="Shader" path="res://assets/Starlight/Star.gdshader" id="1_vx40u"]
+[ext_resource type="Texture2D" uid="uid://cweg0rded3pvf" path="res://assets/Starlight/psf-textures/jwst.exr" id="2_y20kl"]
 
 [resource]
 render_priority = -128

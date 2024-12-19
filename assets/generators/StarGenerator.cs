@@ -42,7 +42,7 @@ public class StarGenerator
 		float massVar = massData["mass_var"];
 		string stellarClass = DetermineStellarClass(mass);
 		
-		Console.WriteLine($"Stellar class is {stellarClass}");
+		GD.Print($"Stellar class is {stellarClass}");
 		switch (stellarClass)
 		{
 			case "BROWN_DWARF":
@@ -53,16 +53,17 @@ public class StarGenerator
 				massiveStarGen = new MassiveStarGenerator();
 				GenerateMassiveStar(mass, massVar);
 				break;
+			case "MAIN_SEQUENCE":
 			default:
-				Console.WriteLine("Generating Main Sequence Star");
+				GD.Print("Generating Main Sequence Star");
 				GenerateMainSequenceStar(mass, massVar);
 				break;
 		}
 		
 		StarData.IsFlareStar = CalculateFlareStar(StarData.SpectralType);
-		Console.WriteLine($"FlareStar = {StarData.IsFlareStar}");
+		GD.Print($"FlareStar = {StarData.IsFlareStar}");
 		StarData.StarId = starId;
-		Console.WriteLine($"StarData so far = {StarData}");
+		GD.Print($"StarData so far = {StarData}");
 	}
 
 	private string DetermineStellarClass(float mass)
@@ -121,7 +122,7 @@ public class StarGenerator
 	{
 		starEvolution = new StarEvolution();
 		float age = starEvolution.CalculateAge(mass);
-		Console.WriteLine($"Star Age = {age}");
+		GD.Print($"Star Age = {age}");
 		string evolutionaryStage = starEvolution.DetermineEvolutionaryStage(mass, age);
 		
 		stellarParams = new StellarParameters();
@@ -153,9 +154,13 @@ public class StarGenerator
 				temperature = (float)wdData["temperature"];
 				radius = (float)wdData["radius"];
 				break;
+			case "MAIN_SEQUENCE":
 			default:
 				luminosityClass = 5;
-				luminosity = starLuminosity.CalculateMainSequenceLuminosity(massVar.ToString(), age, Convert.ToSingle(starParams["L-Min"]));
+				float minLuminosity = Convert.ToSingle(starParams["L-Min"]);
+				GD.Print($"Calculating main sequence luminosity for mass {massVar}, age {age}, min luminosity {minLuminosity}");
+				luminosity = starLuminosity.CalculateMainSequenceLuminosity(massVar.ToString(), age, minLuminosity);
+				GD.Print($"Calculated luminosity: {luminosity}");
 				temperature = starTemperature.CalculateMainSequenceTemperature(Convert.ToSingle(starParams["Temperature"]));
 				radius = starRadius.CalculateMainSequenceRadius(mass);
 				break;

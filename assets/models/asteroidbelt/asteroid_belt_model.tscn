@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://cpajd6qvncq0o"]
+
+[ext_resource type="Script" path="res://assets/models/asteroidbelt/asteroid_belt_model.gd" id="1_oj0ra"]
+
+[node name="AsteroidBeltModel" type="Node3D"]
+script = ExtResource("1_oj0ra")
+
+[node name="GPUParticles3D" type="GPUParticles3D" parent="."]

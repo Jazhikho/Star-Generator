@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://cfqmf30bam1vl"]
+[gd_scene load_steps=5 format=3 uid="uid://cfqmf30bam1vl"]
 
 [ext_resource type="Script" path="res://scenes/MainMenu/MainMenu.gd" id="1_mokhh"]
 [ext_resource type="Script" path="res://scenes/MainMenu/SettingsPanel.gd" id="2_ie3y3"]
 [ext_resource type="PackedScene" uid="uid://dbqmblj77nws5" path="res://scenes/MainMenu/progress_window.tscn" id="3_gjo0t"]
+[ext_resource type="PackedScene" uid="uid://358m433lvu2f" path="res://scenes/SaveLoadPanel/SaveLoadPanel.tscn" id="4_0b138"]
 
 [node name="MainMenu" type="Control"]
 layout_mode = 3
@@ -209,6 +210,9 @@ size = Vector2i(500, 400)
 access = 2
 
 [node name="ProgressWindow" parent="." instance=ExtResource("3_gjo0t")]
+
+[node name="SaveLoadPanel" parent="." instance=ExtResource("4_0b138")]
+layout_mode = 1
 
 [connection signal="pressed" from="MenuButtons/NewButton" to="." method="_on_new_button_pressed"]
 [connection signal="pressed" from="MenuButtons/SettingsButton" to="." method="_on_settings_button_pressed"]

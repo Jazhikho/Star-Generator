@@ -1,0 +1,49 @@
+[gd_scene load_steps=7 format=3 uid="uid://dtv76q4hasx6k"]
+
+[ext_resource type="Script" path="res://scenes/SystemView/system_view.gd" id="1_l26f6"]
+[ext_resource type="Script" path="res://assets/global/camera_3d.gd" id="2_cqrpr"]
+[ext_resource type="Texture2D" uid="uid://b22vc5eurd7xx" path="res://assets/textures/2k_stars_milky_way.jpg" id="3_8upxl"]
+
+[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_5nbsq"]
+panorama = ExtResource("3_8upxl")
+filter = false
+energy_multiplier = 1.5
+
+[sub_resource type="Sky" id="Sky_ep4l5"]
+sky_material = SubResource("PanoramaSkyMaterial_5nbsq")
+process_mode = 1
+radiance_size = 6
+
+[sub_resource type="Environment" id="Environment_chjx3"]
+background_mode = 2
+sky = SubResource("Sky_ep4l5")
+ssr_max_steps = 100
+ssr_fade_in = 0.102453
+ssr_fade_out = 1.18921
+glow_enabled = true
+glow_normalized = true
+
+[node name="SystemView" type="Node3D"]
+process_mode = 3
+script = ExtResource("1_l26f6")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.707107, 0.707107, 0, -0.707107, 0.707107, 0, 50, 50)
+fov = 70.0
+near = 0.1
+far = 40000.0
+script = ExtResource("2_cqrpr")
+
+[node name="PrimaryStar" type="Node3D" parent="."]
+
+[node name="OtherStars" type="Node3D" parent="PrimaryStar"]
+
+[node name="Environment" type="Node3D" parent="."]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="Environment"]
+environment = SubResource("Environment_chjx3")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Environment"]
+transform = Transform3D(1, 0, 0, 0, 1.19249e-08, 1, 0, -1, 1.19249e-08, 0, 6.35356, 0)
+light_energy = 0.1
+sky_mode = 1

@@ -35,7 +35,7 @@ public class OrbitalDynamics
 
 	public float CalculateEccentricity()
 	{
-		return Roll.Vary(float.Parse(Roll.Search(ECCENTRICITY, Roll.Dice()).ToString()));
+		return Roll.Vary(float.Parse(Roll.Seek(ECCENTRICITY)));
 	}
 
 	public float DetermineSeparation(int mod, float? minSep)

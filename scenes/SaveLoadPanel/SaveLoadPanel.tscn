@@ -1,0 +1,95 @@
+[gd_scene load_steps=2 format=3 uid="uid://358m433lvu2f"]
+
+[ext_resource type="Script" path="res://scenes/SaveLoadPanel/save_load_panel.gd" id="1_vtm8d"]
+
+[node name="SaveLoadPanel" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_vtm8d")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.0627451, 0.0627451, 0.0627451, 0.215686)
+
+[node name="DialogeWindow" type="ColorRect" parent="."]
+custom_minimum_size = Vector2(400, 600)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.52549, 0.52549, 0.52549, 1)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="DialogeWindow"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="Title" type="Label" parent="DialogeWindow/VBoxContainer"]
+layout_mode = 2
+text = "Save / Load Data"
+horizontal_alignment = 1
+
+[node name="ScrollContainer" type="ScrollContainer" parent="DialogeWindow/VBoxContainer"]
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="SlotContainer" type="VBoxContainer" parent="DialogeWindow/VBoxContainer/ScrollContainer"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="DialogeWindow/VBoxContainer"]
+layout_mode = 2
+
+[node name="FileSave" type="Label" parent="DialogeWindow/VBoxContainer/VBoxContainer"]
+layout_mode = 2
+text = "File Save Name:"
+
+[node name="InputContainer" type="HBoxContainer" parent="DialogeWindow/VBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="NameInput" type="LineEdit" parent="DialogeWindow/VBoxContainer/VBoxContainer/InputContainer"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SaveButton" type="Button" parent="DialogeWindow/VBoxContainer/VBoxContainer/InputContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Save"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="DialogeWindow/VBoxContainer/VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="LoadButton" type="Button" parent="DialogeWindow/VBoxContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Load"
+
+[node name="CancelButton" type="Button" parent="DialogeWindow/VBoxContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Cancel"
+
+[connection signal="pressed" from="DialogeWindow/VBoxContainer/VBoxContainer/InputContainer/SaveButton" to="." method="_on_save_button_pressed"]
+[connection signal="pressed" from="DialogeWindow/VBoxContainer/VBoxContainer/HBoxContainer/LoadButton" to="." method="_on_load_button_pressed"]
+[connection signal="pressed" from="DialogeWindow/VBoxContainer/VBoxContainer/HBoxContainer/CancelButton" to="." method="_on_cancel_button_pressed"]

@@ -3,9 +3,9 @@ render_mode blend_add,depth_draw_never,cull_front,shadows_disabled,skip_vertex_t
 
 // Visual properties:
 uniform sampler2D texture_emission : hint_default_black;
-uniform float emission_energy = 5e300;
+uniform float emission_energy = 500000000;
 uniform float billboard_size_deg : hint_range(0, 90) = 90;
-uniform float luminosity_cap = 1e300;
+uniform float luminosity_cap = 1e30;
 uniform float meters_per_lightyear = 0.306601;
 uniform float color_gamma : hint_range(0.0, 10.0) = 3.0;
 uniform bool clamp_output = false;
