@@ -39,11 +39,8 @@ func get_save_slots() -> Dictionary:
 	return slots
 
 func save_game(slot: int, save_name: String) -> void:
-	var save_data = {
-		"galaxy_data": GlobalData.galaxy_data,
-		"systems_data": GlobalData.systems_data
-	}
-	var bridge = get_tree().get_root().get_node_or_null("MainMenu/CSBridge")
+	# Try to find the bridge in different possible locations
+	var bridge = get_tree().get_root().find_child("CSBridge", true, false)
 	if not bridge:
 		emit_signal("save_failed", "Bridge not found")
 		return

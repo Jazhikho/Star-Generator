@@ -18,7 +18,6 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-mouse_filter = 2
 
 [node name="TopBar" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
@@ -52,11 +51,9 @@ text = "Generate Jump Routes"
 [node name="SceneView" type="SubViewportContainer" parent="VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
-mouse_filter = 2
 stretch = true
 
 [node name="SubViewport" type="SubViewport" parent="VBoxContainer/SceneView"]
-handle_input_locally = false
 size = Vector2i(1152, 578)
 render_target_update_mode = 4
 

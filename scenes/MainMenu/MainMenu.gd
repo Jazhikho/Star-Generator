@@ -64,23 +64,40 @@ func _on_load_failed(error):
 	print("Load failed: ", error)
 
 func _on_new_button_pressed():
+	if galaxy_generator:
+		galaxy_generator.queue_free()
+	
+	galaxy_generator = bridge
+	
+	# Create progress window
 	progress_window = progress_window_scene.instantiate()
 	add_child(progress_window)
 	progress_window.connect("save_requested", _on_progress_save_requested)
 	progress_window.connect("load_requested", _on_progress_load_requested)
 	progress_window.start_progress()
 	
-	# Ensure bridge exists
-	if not bridge:
-		bridge = preload("res://assets/generators/CSBridge.cs").new()
-		bridge.name = "CSBridge"
-		add_child(bridge)
-	
-	galaxy_generator = bridge
+	# Create galaxy generator
+	generate_galaxy()
+	generation_timer.start(0.1)
 	
 	generate_galaxy()
+	generation_timer.start(0.1)  # Check progress every 0.1 seconds
 
 func generate_galaxy():
+	if is_instance_valid(galaxy_generator):
+		galaxy_generator.CancelGeneration()
+		galaxy_generator = null
+	
+	# Try to find CSBridge relative to this node
+	galaxy_generator = $CSBridge
+	if not galaxy_generator:
+		# If not found as a direct child, try to find it in the scene
+		galaxy_generator = find_child("CSBridge", true, false)
+	
+	if not galaxy_generator:
+		print("Error: CSBridge not found")
+		return
+	
 	var settings = GlobalSettings.galaxy_settings
 	var x = settings.get("x_sector", 3)
 	var y = settings.get("y_sector", 3)
@@ -89,8 +106,6 @@ func generate_galaxy():
 	var system_chance = settings.get("system_chance", 15.0)
 	var anomaly_chance = settings.get("anomaly_chance", 1.0)
 	galaxy_generator.GenerateGalaxy(x, y, z, parsecs, system_chance, anomaly_chance)
-	
-	set_process(true)
 	
 func _check_generation_progress():
 	if is_instance_valid(galaxy_generator):
@@ -117,6 +132,21 @@ func _on_generation_completed():
 	print("Galaxy data size: ", GlobalData.galaxy_data.size())
 	print("Systems data size: ", GlobalData.systems_data.size())
 	
+	# Debug: Print first few entries
+	var count = 0
+	for key in GlobalData.galaxy_data:
+		print("Galaxy data entry: ", GlobalData.galaxy_data[key])
+		count += 1
+		if count >= 5:  # Print only first 5 entries
+			break
+	
+	count = 0
+	for key in GlobalData.systems_data:
+		print("Systems data entry: ", GlobalData.systems_data[key])
+		count += 1
+		if count >= 5:  # Print only first 5 entries
+			break
+
 func _on_progress_save_requested():
 	open_save_slot_panel()
 
@@ -173,10 +203,7 @@ func open_load_slot_panel():
 	save_load_panel.show_panel(false)
 
 func _on_save_slot_selected(slot: int, name: String):
-	print("Attempting to save. Galaxy data size: ", GlobalData.galaxy_data.size())
-	print("Systems data size: ", GlobalData.systems_data.size())
-	
-	if GlobalData.is_data_loaded():
+	if bridge and bridge.GetSystemCount() > 0:
 		SaveManager.save_game(slot, name)
 	else:
 		print("No data to save!")
@@ -186,19 +213,9 @@ func _on_load_slot_selected(slot: int):
 	_transition_to_galaxy_view()
 
 func _exit_tree():
+	if is_instance_valid(galaxy_generator):
+		galaxy_generator.CancelGeneration()
+		galaxy_generator = null
 	if generation_timer:
 		generation_timer.stop()
 		generation_timer = null
-	if is_instance_valid(bridge):
-		bridge.queue_free()
-	if is_instance_valid(galaxy_generator):
-		galaxy_generator.queue_free()
-
-func _process(delta):
-	if galaxy_generator and galaxy_generator.IsGenerating():
-		var progress = galaxy_generator.GetCurrentProgress()
-		var status = galaxy_generator.GetCurrentStatus()
-		update_progress_window(progress, status)
-	elif galaxy_generator and galaxy_generator.IsCompleted():
-		_on_generation_completed()
-		set_process(false)  # Stop processing once completed

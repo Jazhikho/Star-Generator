@@ -16,7 +16,7 @@ const DOUBLE_CLICK_TIME = 0.3
 var last_click_time = 0.0
 var double_click_timer
 var last_clicked_star
-var ray_length = 1000
+var ray_length = 10000
 var space_state: PhysicsDirectSpaceState3D
 
 var current_scale: float = 1.0
@@ -42,6 +42,17 @@ func _ready():
 	double_click_timer.one_shot = true
 	double_click_timer.wait_time = 0.3
 	add_child(double_click_timer)
+	
+	# Debug sphere to test clicking
+	var debug_sphere = Area3D.new()
+	var debug_shape = CollisionShape3D.new()
+	var sphere = SphereShape3D.new()
+	sphere.radius = 5.0
+	debug_shape.shape = sphere
+	debug_sphere.add_child(debug_shape)
+	debug_sphere.position = Vector3(0, 0, 0)
+	debug_sphere.set_meta("star_data", {"id": "DEBUG_STAR"})
+	add_child(debug_sphere)
 
 	setup_stars()
 	setup_collision_system()
@@ -70,27 +81,41 @@ func setup_stars():
 	stars.set_star_list(star_list)
 
 func setup_collision_system():
-	for child in get_children():
-		if child is Area3D:
-			child.queue_free()
-	
+	print("Setting up collision system...")
+	var count = 0
 	for coords in star_data_map:
 		var collision_sphere = Area3D.new()
 		var collision_shape = CollisionShape3D.new()
 		var sphere_shape = SphereShape3D.new()
 		
-		sphere_shape.radius = 1.0
+		sphere_shape.radius = 2.0
 		collision_shape.shape = sphere_shape
 		
 		collision_sphere.add_child(collision_shape)
 		collision_sphere.position = coords
 		collision_sphere.collision_layer = 1
-		collision_sphere.collision_mask = 1
+		
+		# Debug visualization
+		var mesh = MeshInstance3D.new()
+		var sphere_mesh = SphereMesh.new()
+		sphere_mesh.radius = 2.0
+		sphere_mesh.height = 4.0
+		var material = StandardMaterial3D.new()
+		material.albedo_color = Color.RED
+		sphere_mesh.material = material
+		mesh.mesh = sphere_mesh
+		collision_sphere.add_child(mesh)
 		
 		collision_sphere.set_meta("star_data", star_data_map[coords])
-		collision_sphere.input_event.connect(_on_star_input_event.bind(collision_sphere))
-		
 		add_child(collision_sphere)
+		
+		count += 1
+		
+		# Print debug info for first few stars
+		if count <= 5:
+			print("Star %s - Position: %s, Data: %s" % [count, coords, star_data_map[coords]])
+	
+	print("Created %s collision spheres" % [count])
 
 func _on_star_input_event(_camera, event, click_position, click_normal, shape_idx, area: Area3D):
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
@@ -143,7 +168,6 @@ func transition_to_system_view(system_data: Array):
 	system_view.create_system()
 	
 	# Tween camera
-	var camera = $Camera3D
 	var tween = create_tween()
 	tween.tween_property(camera, "position", Vector3(0, 50, 100), 1.0).set_trans(Tween.TRANS_CUBIC)
 	tween.parallel().tween_property(camera, "rotation", Vector3(-PI/6, 0, 0), 1.0).set_trans(Tween.TRANS_CUBIC)
@@ -160,7 +184,6 @@ func transition_to_galaxy_view():
 	current_view = galaxy_view
 	
 	# Tween camera back
-	var camera = $Camera3D
 	var tween = create_tween()
 	tween.tween_property(camera, "position", Vector3(0, 0, 100), 1.0).set_trans(Tween.TRANS_CUBIC)
 	tween.parallel().tween_property(camera, "rotation", Vector3.ZERO, 1.0).set_trans(Tween.TRANS_CUBIC)
@@ -216,10 +239,12 @@ func _process(delta):
 
 func _unhandled_input(event):
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+		print("Mouse click detected in Galaxy View")  # Debug print
 		var mouse_pos = get_viewport().get_mouse_position()
-		var ray_origin = camera.project_ray_origin(mouse_pos)
-		var ray_end = ray_origin + camera.project_ray_normal(mouse_pos) * 1000
-		var query = PhysicsRayQueryParameters3D.create(ray_origin, ray_end)
+		var from = camera.project_ray_origin(mouse_pos)
+		var to = from + camera.project_ray_normal(mouse_pos) * ray_length
+		
+		var query = PhysicsRayQueryParameters3D.create(from, to)
 		var result = get_world_3d().direct_space_state.intersect_ray(query)
 		
 		if result:
@@ -261,3 +286,17 @@ func _on_camera_zoom_changed(zoom_factor: float):
 
 func to_main_menu():
 	get_node("/root/Main/UI").to_main_menu()
+
+func _on_viewport_input(event):
+	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+		print("Mouse click detected in viewport")  # Debug print
+		var mouse_pos = get_viewport().get_mouse_position()
+		var from = camera.project_ray_origin(mouse_pos)
+		var to = from + camera.project_ray_normal(mouse_pos) * ray_length
+		
+		var query = PhysicsRayQueryParameters3D.create(from, to)
+		var result = space_state.intersect_ray(query)
+		
+		if result and result.collider is Area3D and result.collider.has_meta("star_data"):
+			var star_data = result.collider.get_meta("star_data")
+			_on_star_clicked(star_data)
