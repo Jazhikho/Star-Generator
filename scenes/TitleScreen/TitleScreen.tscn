@@ -1,0 +1,23 @@
+[gd_scene load_steps=3 format=3 uid="uid://c58y3lua7c8j7"]
+
+[ext_resource type="Script" path="res://scenes/TitleScreen/title_screen.gd" id="1_1"]
+
+[sub_resource type="Environment" id="Environment_vlc0i"]
+background_mode = 2
+
+[node name="TitleScreen" type="Node3D"]
+script = ExtResource("1_1")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 10)
+fov = 65.0
+
+[node name="Stars" type="Node3D" parent="."]
+
+[node name="TitleLabel" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.00484967, 7.26805)
+text = "StarGen"
+font_size = 64
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_vlc0i")

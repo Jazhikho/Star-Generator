@@ -25,6 +25,9 @@ func _ready():
 	current_view = galaxy_view
 	space_state = get_world_3d().direct_space_state
 	
+	print("Galaxy data keys: ", GlobalData.galaxy_data.keys())
+	print("Systems data keys: ", GlobalData.systems_data.keys())
+	
 	var pars = GlobalSettings.galaxy_settings.parsecs
 	var cam_x = GlobalSettings.galaxy_settings.x_sector * pars / 2
 	var cam_y = GlobalSettings.galaxy_settings.y_sector * pars / 2
@@ -67,7 +70,10 @@ func setup_stars():
 	stars.set_star_list(star_list)
 
 func setup_collision_system():
-	# Create collision spheres for each star
+	for child in get_children():
+		if child is Area3D:
+			child.queue_free()
+	
 	for coords in star_data_map:
 		var collision_sphere = Area3D.new()
 		var collision_shape = CollisionShape3D.new()
@@ -122,11 +128,7 @@ func _on_star_double_clicked(star_data: Dictionary):
 	
 	if GlobalData.systems_data.has(star_data.id):
 		var system_info = GlobalData.systems_data[star_data.id]
-		get_parent().to_system_view(system_info.data)
-		
-		#print("System Information:")
-		#print(system_info.data)
-		#transition_to_system_view(system_info.data)
+		get_node("/root/Main").load_system_view(system_info.data)
 		
 func transition_to_system_view(system_data: Array):
 	galaxy_view.visible = false
@@ -214,18 +216,22 @@ func _process(delta):
 
 func _unhandled_input(event):
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-		print("Mouse clicked at: ", event.position)  # Debug print
-		var result = raycast_from_mouse(event.position)
+		var mouse_pos = get_viewport().get_mouse_position()
+		var ray_origin = camera.project_ray_origin(mouse_pos)
+		var ray_end = ray_origin + camera.project_ray_normal(mouse_pos) * 1000
+		var query = PhysicsRayQueryParameters3D.create(ray_origin, ray_end)
+		var result = get_world_3d().direct_space_state.intersect_ray(query)
+		
 		if result:
-			var collider = result.collider
-			if collider is Area3D and collider.has_meta("star_data"):
-				var star_data = collider.get_meta("star_data")
-				print("Star clicked: ", star_data.id)  # Debug print
+			print("Ray hit: ", result.collider)  # Debug print
+			if result.collider is Area3D and result.collider.has_meta("star_data"):
+				var star_data = result.collider.get_meta("star_data")
+				print("Star data found: ", star_data)  # Debug print
 				_on_star_clicked(star_data)
 			else:
-				print("Clicked object is not a star")  # Debug print
+				print("Hit object is not a star")
 		else:
-			print("No object clicked")  # Debug print
+			print("Ray hit nothing")
 			
 func raycast_from_mouse(mouse_pos):
 	var from = camera.project_ray_origin(mouse_pos)

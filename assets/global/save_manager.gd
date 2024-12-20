@@ -39,6 +39,10 @@ func get_save_slots() -> Dictionary:
 	return slots
 
 func save_game(slot: int, save_name: String) -> void:
+	var save_data = {
+		"galaxy_data": GlobalData.galaxy_data,
+		"systems_data": GlobalData.systems_data
+	}
 	var bridge = get_tree().get_root().get_node_or_null("MainMenu/CSBridge")
 	if not bridge:
 		emit_signal("save_failed", "Bridge not found")
@@ -79,6 +83,12 @@ func save_game(slot: int, save_name: String) -> void:
 	emit_signal("save_completed", slot)
 
 func load_game(slot: int) -> void:
+	var loaded_data = {}
+	
+	GlobalData.clear_data()
+	GlobalData.galaxy_data = loaded_data.get("galaxy_data", {})
+	GlobalData.systems_data = loaded_data.get("systems_data", {})
+
 	var galaxy_data_str = save_data.get_value("galaxy_data", str(slot), null)
 	var systems_data_str = save_data.get_value("systems_data", str(slot), null)
 	
@@ -93,6 +103,7 @@ func load_game(slot: int) -> void:
 	GlobalData.set_data(galaxy_data, systems_data)
 	
 	print("Loaded galaxy data size: ", GlobalData.galaxy_data.size())
+	print("Loaded systems data size: ", GlobalData.systems_data.size())
 	
 	emit_signal("load_completed", slot)
 

@@ -103,6 +103,12 @@ namespace Generator
 						progressHandler, cancellationTokenSource.Token);
 				});
 			}
+			catch (OperationCanceledException)
+			{
+				GD.Print("Galaxy generation was cancelled.");
+				// Handle cancellation gracefully
+				return;
+			}
 			finally
 			{
 				CallDeferred("StartCompletionTimer");

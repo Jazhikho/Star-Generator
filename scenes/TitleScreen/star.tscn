@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=3 uid="uid://dqh53kv8etsij"]
+
+[ext_resource type="Script" path="res://scenes/TitleScreen/star.gd" id="1_0tw45"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_v81ho"]
+emission_enabled = true
+emission = Color(1, 1, 1, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_xxxxx"]
+material = SubResource("StandardMaterial3D_v81ho")
+height = 0.5
+radial_segments = 12
+rings = 1
+is_hemisphere = true
+
+[node name="Star" type="Node3D"]
+script = ExtResource("1_0tw45")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
+mesh = SubResource("SphereMesh_xxxxx")

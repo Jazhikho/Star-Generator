@@ -12,5 +12,8 @@ func clear_data():
 	galaxy_data.clear()
 	systems_data.clear()
 
-func has_data() -> bool:
-	return !galaxy_data.is_empty()
+func is_data_loaded() -> bool:
+	return !galaxy_data.is_empty() and !systems_data.is_empty()
+
+func get_system_count() -> int:
+	return galaxy_data.size()

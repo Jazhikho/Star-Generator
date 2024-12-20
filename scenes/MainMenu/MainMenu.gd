@@ -38,6 +38,14 @@ func _ready():
 	bridge = preload("res://assets/generators/CSBridge.cs").new()
 	bridge.name = "CSBridge"
 	add_child(bridge)
+	
+	mouse_filter = Control.MOUSE_FILTER_STOP
+	$MenuButtons.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	
+	# Make sure all buttons can receive input
+	for button in $MenuButtons.get_children():
+		if button is Button:
+			button.mouse_filter = Control.MOUSE_FILTER_STOP
 
 func _on_save_completed(slot):
 	# Optionally show a success message
@@ -56,31 +64,23 @@ func _on_load_failed(error):
 	print("Load failed: ", error)
 
 func _on_new_button_pressed():
-	if galaxy_generator:
-		galaxy_generator.queue_free()
-	
-	galaxy_generator = bridge
-	
-	# Create progress window
 	progress_window = progress_window_scene.instantiate()
 	add_child(progress_window)
 	progress_window.connect("save_requested", _on_progress_save_requested)
 	progress_window.connect("load_requested", _on_progress_load_requested)
 	progress_window.start_progress()
 	
-	# Create galaxy generator
-	generate_galaxy()
-	generation_timer.start(0.1)
+	# Ensure bridge exists
+	if not bridge:
+		bridge = preload("res://assets/generators/CSBridge.cs").new()
+		bridge.name = "CSBridge"
+		add_child(bridge)
+	
+	galaxy_generator = bridge
 	
 	generate_galaxy()
-	generation_timer.start(0.1)  # Check progress every 0.1 seconds
 
 func generate_galaxy():
-	if is_instance_valid(galaxy_generator):
-		galaxy_generator.CancelGeneration()
-		galaxy_generator = null
-	
-	galaxy_generator = get_node("/root/MainMenu/CSBridge")
 	var settings = GlobalSettings.galaxy_settings
 	var x = settings.get("x_sector", 3)
 	var y = settings.get("y_sector", 3)
@@ -89,6 +89,8 @@ func generate_galaxy():
 	var system_chance = settings.get("system_chance", 15.0)
 	var anomaly_chance = settings.get("anomaly_chance", 1.0)
 	galaxy_generator.GenerateGalaxy(x, y, z, parsecs, system_chance, anomaly_chance)
+	
+	set_process(true)
 	
 func _check_generation_progress():
 	if is_instance_valid(galaxy_generator):
@@ -107,10 +109,14 @@ func update_progress_window(progress: float, status: String):
 func _on_generation_completed():
 	if is_instance_valid(progress_window):
 		progress_window.complete_progress()
-	# Clean up references
-	if galaxy_generator:
-		galaxy_generator = null
-
+	
+	# Ensure data is stored in GlobalData
+	GlobalData.galaxy_data = galaxy_generator.GetGalaxyDataForSaving()
+	GlobalData.systems_data = galaxy_generator.GetSystemsDataForSaving()
+	
+	print("Galaxy data size: ", GlobalData.galaxy_data.size())
+	print("Systems data size: ", GlobalData.systems_data.size())
+	
 func _on_progress_save_requested():
 	open_save_slot_panel()
 
@@ -133,7 +139,11 @@ func _on_load_button_pressed():
 	open_load_slot_panel()
 
 func _transition_to_galaxy_view():
-	get_node("/root/Main/UI").to_galaxy_view()
+	var main = get_node("/root/Main")
+	if main and main.has_signal("galaxy_view_requested"):
+		main.emit_signal("galaxy_view_requested")
+	else:
+		print("Error: Unable to find Main node or galaxy_view_requested signal")
 
 func open_settings_panel():
 	settings_panel.visible = true
@@ -163,7 +173,10 @@ func open_load_slot_panel():
 	save_load_panel.show_panel(false)
 
 func _on_save_slot_selected(slot: int, name: String):
-	if bridge and bridge.GetSystemCount() > 0:
+	print("Attempting to save. Galaxy data size: ", GlobalData.galaxy_data.size())
+	print("Systems data size: ", GlobalData.systems_data.size())
+	
+	if GlobalData.is_data_loaded():
 		SaveManager.save_game(slot, name)
 	else:
 		print("No data to save!")
@@ -173,9 +186,19 @@ func _on_load_slot_selected(slot: int):
 	_transition_to_galaxy_view()
 
 func _exit_tree():
-	if is_instance_valid(galaxy_generator):
-		galaxy_generator.CancelGeneration()
-		galaxy_generator = null
 	if generation_timer:
 		generation_timer.stop()
 		generation_timer = null
+	if is_instance_valid(bridge):
+		bridge.queue_free()
+	if is_instance_valid(galaxy_generator):
+		galaxy_generator.queue_free()
+
+func _process(delta):
+	if galaxy_generator and galaxy_generator.IsGenerating():
+		var progress = galaxy_generator.GetCurrentProgress()
+		var status = galaxy_generator.GetCurrentStatus()
+		update_progress_window(progress, status)
+	elif galaxy_generator and galaxy_generator.IsCompleted():
+		_on_generation_completed()
+		set_process(false)  # Stop processing once completed

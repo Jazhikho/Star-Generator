@@ -21,6 +21,8 @@ var camera : Camera3D
 signal main_menu_requested
 signal galaxy_view_requested
 
+var current_menu_instance = null
+
 func _ready():
 	# Connect signals
 	main_menu_button.pressed.connect(_on_main_menu_pressed)
@@ -37,15 +39,23 @@ func _ready():
 	
 	# Hide info panel by default
 	info_panel.visible = false
-	hide_galaxy_view_ui()
+	
+	# Show the main container by default
+	$MainContainer.visible = true
+	$MainContainer.mouse_filter = Control.MOUSE_FILTER_STOP
+	$MainContainer/VBoxContainer.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	$MainContainer/VBoxContainer/TopBar.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	
+	# Make sure buttons can receive input
+	for button in $MainContainer/VBoxContainer/TopBar.get_children():
+		if button is Button:
+			button.mouse_filter = Control.MOUSE_FILTER_STOP
 
 func set_camera(cam: Camera3D):
 	camera = cam
 	if cam:
-		# Enable camera-related UI elements
 		$MainContainer/CameraControls.visible = true
 	else:
-		# Disable camera-related UI elements
 		$MainContainer/CameraControls.visible = false
 
 func show_info(title: String, content: String):
@@ -98,11 +108,47 @@ func hide_galaxy_view_ui():
 	$MainContainer.visible = false
 
 func _on_main_menu_pressed():
-	get_node("/root/Main").to_main_menu()
-	hide_galaxy_view_ui()
+	get_node("/root/Main").toggle_main_menu()
 
 func to_main_menu():
 	emit_signal("main_menu_requested")
 
 func to_galaxy_view():
 	emit_signal("galaxy_view_requested")
+
+func show_main_menu(menu_scene):
+	# Clear any existing menu
+	if current_menu_instance:
+		current_menu_instance.queue_free()
+	
+	# Instantiate new menu
+	current_menu_instance = menu_scene.instantiate()
+	
+	# Add it to the info panel
+	info_panel.visible = true
+	info_text.visible = false  # Hide the default info text
+	info_title.visible = false  # Hide the default info title
+	
+	info_panel.add_child(current_menu_instance)
+
+func hide_main_menu():
+	if current_menu_instance:
+		current_menu_instance.queue_free()
+		current_menu_instance = null
+	
+	info_panel.visible = false
+	info_text.visible = true
+	info_title.visible = true
+
+func _input(event):
+	if event is InputEventMouseButton:
+		if event.pressed:
+			var mouse_pos = get_viewport().get_mouse_position()
+			print("Mouse clicked at: ", mouse_pos)
+			# Check if any buttons should handle this
+			for button in $MainContainer/VBoxContainer/TopBar.get_children():
+				if button is Button:
+					var rect = button.get_global_rect()
+					if rect.has_point(mouse_pos):
+						print("Should click button: ", button.name)
+						button.pressed.emit()

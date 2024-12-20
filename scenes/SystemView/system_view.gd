@@ -133,6 +133,8 @@ func update_orbits(body: Node3D, delta: float):
 		var orbit_path = body.get_node("OrbitPath")
 		var path_follow = orbit_path.get_node("PathFollow3D")
 
+func _on_planet_double_clicked(planet_data: Dictionary):
+	get_node("/root/Main").load_object_view(planet_data)
 
 func _process(delta):
 	var camera = $Camera3D  # Adjust path as needed
