@@ -1,11 +1,10 @@
-[gd_scene load_steps=12 format=3 uid="uid://e1h6c0vjcquv"]
+[gd_scene load_steps=14 format=3 uid="uid://e1h6c0vjcquv"]
 
 [ext_resource type="Script" path="res://assets/global/main.gd" id="1_a2gs7"]
 [ext_resource type="Script" path="res://assets/global/view_manager.gd" id="2_custom"]
 [ext_resource type="Script" path="res://assets/global/camera_3d.gd" id="3_0b68k"]
 [ext_resource type="PackedScene" uid="uid://b0nt4n13a6448" path="res://assets/Starlight/Stars.tscn" id="4_y5kv4"]
 [ext_resource type="PackedScene" uid="uid://loksnlsh7qe5" path="res://assets/models/star/star_model.tscn" id="5_3j57e"]
-[ext_resource type="Script" path="res://scenes/SystemView/system_view.gd" id="5_s4wvt"]
 [ext_resource type="PackedScene" uid="uid://bcvia2tmcrmns" path="res://assets/models/planet/planet_model.tscn" id="6_ld4uf"]
 [ext_resource type="Texture2D" uid="uid://b22vc5eurd7xx" path="res://assets/textures/2k_stars_milky_way.jpg" id="7_703xk"]
 
@@ -16,6 +15,23 @@ panorama = ExtResource("7_703xk")
 sky_material = SubResource("PanoramaSkyMaterial_ywofr")
 
 [sub_resource type="Environment" id="Environment_k45vj"]
+background_mode = 2
+sky = SubResource("Sky_0ptqy")
+
+[sub_resource type="Sky" id="Sky_ep4l5"]
+process_mode = 1
+radiance_size = 6
+
+[sub_resource type="Environment" id="Environment_chjx3"]
+background_mode = 2
+sky = SubResource("Sky_ep4l5")
+ssr_max_steps = 100
+ssr_fade_in = 0.102453
+ssr_fade_out = 1.18921
+glow_enabled = true
+glow_normalized = true
+
+[sub_resource type="Environment" id="Environment_2ihn4"]
 background_mode = 2
 sky = SubResource("Sky_0ptqy")
 
@@ -69,6 +85,7 @@ text = "Generate Jump Routes"
 [node name="SceneView" type="SubViewportContainer" parent="VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
+mouse_filter = 2
 stretch = true
 
 [node name="SubViewport" type="SubViewport" parent="VBoxContainer/SceneView"]
@@ -80,30 +97,31 @@ render_target_update_mode = 4
 script = ExtResource("2_custom")
 
 [node name="Camera3D" type="Camera3D" parent="VBoxContainer/SceneView/SubViewport/ViewManager"]
-unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 50)
 script = ExtResource("3_0b68k")
 
 [node name="GalaxyView" type="Node3D" parent="VBoxContainer/SceneView/SubViewport/ViewManager"]
-unique_name_in_owner = true
 
 [node name="StarManager" parent="VBoxContainer/SceneView/SubViewport/ViewManager/GalaxyView" instance=ExtResource("4_y5kv4")]
 
+[node name="WorldEnvironment" type="WorldEnvironment" parent="VBoxContainer/SceneView/SubViewport/ViewManager/GalaxyView"]
+environment = SubResource("Environment_k45vj")
+
 [node name="SystemView" type="Node3D" parent="VBoxContainer/SceneView/SubViewport/ViewManager"]
-unique_name_in_owner = true
 visible = false
-script = ExtResource("5_s4wvt")
 
 [node name="PrimaryStar" parent="VBoxContainer/SceneView/SubViewport/ViewManager/SystemView" instance=ExtResource("5_3j57e")]
 
 [node name="OtherStars" type="Node3D" parent="VBoxContainer/SceneView/SubViewport/ViewManager/SystemView/PrimaryStar"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="VBoxContainer/SceneView/SubViewport/ViewManager/SystemView"]
+environment = SubResource("Environment_chjx3")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="VBoxContainer/SceneView/SubViewport/ViewManager/SystemView"]
 transform = Transform3D(1, 0, 0, 0, 1.19249e-08, 1, 0, -1, 1.19249e-08, 0, 6.35356, 0)
 light_energy = 0.1
 
 [node name="ObjectView" type="Node3D" parent="VBoxContainer/SceneView/SubViewport/ViewManager"]
-unique_name_in_owner = true
 visible = false
 
 [node name="PlanetModel" parent="VBoxContainer/SceneView/SubViewport/ViewManager/ObjectView" instance=ExtResource("6_ld4uf")]
@@ -111,8 +129,8 @@ visible = false
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="VBoxContainer/SceneView/SubViewport/ViewManager/ObjectView"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.24236, 0)
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="VBoxContainer/SceneView/SubViewport/ViewManager"]
-environment = SubResource("Environment_k45vj")
+[node name="WorldEnvironment" type="WorldEnvironment" parent="VBoxContainer/SceneView/SubViewport/ViewManager/ObjectView"]
+environment = SubResource("Environment_2ihn4")
 
 [node name="CameraControls" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2

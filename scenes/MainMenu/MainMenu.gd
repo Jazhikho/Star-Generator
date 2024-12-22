@@ -22,6 +22,7 @@ var progress_window: Window
 var galaxy_generator: Node
 var generation_timer: Timer
 var bridge: Node
+var view_manager: Node3D
 
 func _ready():
 	settings_panel.visible = false
@@ -32,9 +33,11 @@ func _ready():
 	SaveManager.connect("load_completed", _on_load_completed)
 	SaveManager.connect("save_failed", _on_save_failed)
 	SaveManager.connect("load_failed", _on_load_failed)
+	
 	generation_timer = Timer.new()
 	generation_timer.connect("timeout", Callable(self, "_check_generation_progress"))
 	add_child(generation_timer)
+	
 	bridge = preload("res://assets/generators/CSBridge.cs").new()
 	bridge.name = "CSBridge"
 	add_child(bridge)
@@ -46,21 +49,28 @@ func _ready():
 	for button in $MenuButtons.get_children():
 		if button is Button:
 			button.mouse_filter = Control.MOUSE_FILTER_STOP
+			
+	# Get reference to ViewManager
+	view_manager = get_node("/root/Main/VBoxContainer/SceneView/SubViewport/ViewManager")
+	if !view_manager:
+		push_error("ViewManager not found!")
 
 func _on_save_completed(slot):
-	# Optionally show a success message
 	print("Save completed in slot ", slot)
+	hide_main_menu()
 
 func _on_load_completed(slot):
 	print("Load completed from slot ", slot)
-	call_deferred("_transition_to_galaxy_view")
+	hide_main_menu()
+	if view_manager:
+		view_manager.setup_galaxy_view()
+	else:
+		push_error("ViewManager not found when trying to setup galaxy view!")
 
 func _on_save_failed(error):
-	# Show error message to user
 	print("Save failed: ", error)
 
 func _on_load_failed(error):
-	# Show error message to user
 	print("Load failed: ", error)
 
 func _on_new_button_pressed():
@@ -76,26 +86,20 @@ func _on_new_button_pressed():
 	progress_window.connect("load_requested", _on_progress_load_requested)
 	progress_window.start_progress()
 	
-	# Create galaxy generator
 	generate_galaxy()
 	generation_timer.start(0.1)
-	
-	generate_galaxy()
-	generation_timer.start(0.1)  # Check progress every 0.1 seconds
 
 func generate_galaxy():
 	if is_instance_valid(galaxy_generator):
 		galaxy_generator.CancelGeneration()
 		galaxy_generator = null
 	
-	# Try to find CSBridge relative to this node
 	galaxy_generator = $CSBridge
 	if not galaxy_generator:
-		# If not found as a direct child, try to find it in the scene
 		galaxy_generator = find_child("CSBridge", true, false)
 	
 	if not galaxy_generator:
-		print("Error: CSBridge not found")
+		push_error("Error: CSBridge not found")
 		return
 	
 	var settings = GlobalSettings.galaxy_settings
@@ -106,7 +110,7 @@ func generate_galaxy():
 	var system_chance = settings.get("system_chance", 15.0)
 	var anomaly_chance = settings.get("anomaly_chance", 1.0)
 	galaxy_generator.GenerateGalaxy(x, y, z, parsecs, system_chance, anomaly_chance)
-	
+
 func _check_generation_progress():
 	if is_instance_valid(galaxy_generator):
 		if galaxy_generator.IsGenerating():
@@ -125,27 +129,13 @@ func _on_generation_completed():
 	if is_instance_valid(progress_window):
 		progress_window.complete_progress()
 	
-	# Ensure data is stored in GlobalData
 	GlobalData.galaxy_data = galaxy_generator.GetGalaxyDataForSaving()
 	GlobalData.systems_data = galaxy_generator.GetSystemsDataForSaving()
 	
-	print("Galaxy data size: ", GlobalData.galaxy_data.size())
-	print("Systems data size: ", GlobalData.systems_data.size())
-	
-	# Debug: Print first few entries
-	var count = 0
-	for key in GlobalData.galaxy_data:
-		print("Galaxy data entry: ", GlobalData.galaxy_data[key])
-		count += 1
-		if count >= 5:  # Print only first 5 entries
-			break
-	
-	count = 0
-	for key in GlobalData.systems_data:
-		print("Systems data entry: ", GlobalData.systems_data[key])
-		count += 1
-		if count >= 5:  # Print only first 5 entries
-			break
+	if view_manager:
+		view_manager.setup_galaxy_view()
+	else:
+		push_error("ViewManager not found when trying to setup galaxy view!")
 
 func _on_progress_save_requested():
 	open_save_slot_panel()
@@ -153,11 +143,13 @@ func _on_progress_save_requested():
 func _on_progress_load_requested():
 	if progress_window:
 		progress_window.queue_free()
-	_transition_to_galaxy_view()
+	hide_main_menu()
+	if view_manager:
+		view_manager.setup_galaxy_view()
 
 func _on_settings_button_pressed():
 	open_settings_panel()
-		
+
 func _on_edit_button_pressed():
 	# TODO: Implement edit functionality
 	pass
@@ -168,12 +160,10 @@ func _on_save_button_pressed():
 func _on_load_button_pressed():
 	open_load_slot_panel()
 
-func _transition_to_galaxy_view():
+func hide_main_menu():
 	var main = get_node("/root/Main")
-	if main and main.has_signal("galaxy_view_requested"):
-		main.emit_signal("galaxy_view_requested")
-	else:
-		print("Error: Unable to find Main node or galaxy_view_requested signal")
+	if main:
+		main.hide_main_menu()
 
 func open_settings_panel():
 	settings_panel.visible = true
@@ -182,18 +172,12 @@ func close_settings_panel():
 	settings_panel.visible = false
 
 func save_settings():
-	if validate_inputs():
-		GlobalSettings.set("x_sector", int(x_sector_input.value))
-		GlobalSettings.set("y_sector", int(y_sector_input.value))
-		GlobalSettings.set("z_sector", int(z_sector_input.value))
-		GlobalSettings.set("parsecs", int(parsecs_input.value))
-		GlobalSettings.set("system_chance", float(system_chance_input.value))
-		GlobalSettings.set("anomaly_chance", float(anomaly_chance_input.value))
-		return true
-	return false
-
-func validate_inputs():
-	# TODO: Implement input validation
+	GlobalSettings.set("x_sector", int(x_sector_input.value))
+	GlobalSettings.set("y_sector", int(y_sector_input.value))
+	GlobalSettings.set("z_sector", int(z_sector_input.value))
+	GlobalSettings.set("parsecs", int(parsecs_input.value))
+	GlobalSettings.set("system_chance", float(system_chance_input.value))
+	GlobalSettings.set("anomaly_chance", float(anomaly_chance_input.value))
 	return true
 
 func open_save_slot_panel():
@@ -210,7 +194,6 @@ func _on_save_slot_selected(slot: int, name: String):
 
 func _on_load_slot_selected(slot: int):
 	SaveManager.load_game(slot)
-	_transition_to_galaxy_view()
 
 func _exit_tree():
 	if is_instance_valid(galaxy_generator):

@@ -178,7 +178,7 @@ func set_star_list(star_list: Array):
 
 	for i in range(star_list.size()):
 		var star = star_list[i]
-		var star_transform = Transform3D().translated(star.star_position)
+		var star_transform = Transform3D().translated(star.coords)
 		mesh.set_instance_transform(i, star_transform)
 		mesh.set_instance_color(i, blackbody_to_rgb(star.temperature))
 		mesh.set_instance_custom_data(i, Color(star.luminosity, 0, 0))
