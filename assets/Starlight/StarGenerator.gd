@@ -72,7 +72,7 @@ class StarClass:
 	func get_star(star_position: Vector3, value: float):
 		var p = self.sample(value)
 		# B and O-class stars are obscenely bright, so spawn them further away than other stars.
-		star_position *= max(1.0, p.luminosity / 400)
+		#star_position *= max(1.0, p.luminosity / 400)
 		return GalaxyStar.new(star_position, p.luminosity, p.temp)
 
 

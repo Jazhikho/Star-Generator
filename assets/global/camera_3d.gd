@@ -1,97 +1,171 @@
 extends Camera3D
 
 @export var movement_speed: float = 50.0
-@export var pan_speed: float = 0.003
-@export var zoom_speed: float = 0.1  #scales instead of movement
-@export var orbit_speed: float = 0.01
-@export var min_zoom: float = 0.1
+@export var pan_speed: float = 0.1
+@export var orbit_speed: float = 0.1
+@export var zoom_speed: float = 0.01
+@export var min_zoom: float = 0.001
 @export var max_zoom: float = 5.0
 
-var is_panning: bool = false
-var is_orbiting: bool = false
-var orbit_target: Vector3 = Vector3.ZERO
-var last_mouse_position: Vector2 = Vector2.ZERO
-var current_zoom: float = 1.0
-#
+var focus_point: Vector3 = Vector3.ZERO
+var current_zoom: float # = 10.0  # Start at 10x zoom
+var view_type: int = 0  # 0 for galaxy, 1 for system, 2 for object
+
+var is_transitioning: bool = false
+var transition_duration: float = 1.0  # Adjust this to control transition speed
+var transition_timer: float = 0.0
+var start_position: Vector3
+var start_focus: Vector3
+var target_position: Vector3
+var target_focus: Vector3
+
 signal zoom_changed(zoom_factor: float)
 
 func _ready():
-	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	setup_initial_position()
 
-func _unhandled_input(event):
-	if event is InputEventMouseButton:
-		match event.button_index:
-			MOUSE_BUTTON_RIGHT:  # Right mouse button for panning
-				is_panning = event.pressed
-			MOUSE_BUTTON_MIDDLE:  # Middle mouse button for orbiting
-				is_orbiting = event.pressed
-				if is_orbiting:
-					last_mouse_position = event.position
-			MOUSE_BUTTON_WHEEL_UP:  # Mouse wheel for zooming in
-				adjust_zoom(-zoom_speed)
-			MOUSE_BUTTON_WHEEL_DOWN:  # Mouse wheel for zooming out
-				adjust_zoom(zoom_speed)
+func setup_initial_position():
+	# Get galaxy bounds from GlobalSettings
+	var pars = GlobalSettings.galaxy_settings.parsecs
+	var max_x = GlobalSettings.galaxy_settings.x_sector * pars
+	var max_y = GlobalSettings.galaxy_settings.y_sector * pars
+	var max_z = GlobalSettings.galaxy_settings.z_sector * pars
 	
-	elif event is InputEventMouseMotion:
-		if is_panning:
-			# Pan the camera based on mouse movement
-			var delta = last_mouse_position
-			var camera_rotation = rotation
-			rotation.z -= -delta.x + pan_speed
-			rotation.x -= -delta.y + pan_speed
-			last_mouse_position = event.position
-		
-		elif is_orbiting and orbit_target != Vector3.ZERO:
-			# Orbit around the target
-			var delta = event.position - last_mouse_position
-			var camera_pos = global_position
-			
-			# Rotate around vertical axis
-			var rotation_y = Basis(Vector3.UP, -delta.x * orbit_speed)
-			camera_pos = rotation_y * (camera_pos - orbit_target) + orbit_target
-			
-			# Rotate around horizontal axis
-			var right = transform.basis.x
-			var rotation_x = Basis(right, -delta.y * orbit_speed)
-			camera_pos = rotation_x * (camera_pos - orbit_target) + orbit_target
-			
-			global_position = camera_pos
-			look_at(orbit_target)
-			
-			last_mouse_position = event.position
+	# Set focus to center of galaxy
+	focus_point = Vector3(max_x/2, max_y/2, max_z/2)
+	
+	# Position camera
+	position = Vector3(max_x/2, max_y/2, max_z * 0.8)
+	look_at(focus_point)
+
+func process_galaxy_movement(delta):
+	if is_transitioning:
+		return  # Don't process movement while transitioning
+	
+	var movement = Vector3.ZERO
+	var camera_basis = global_transform.basis
+	
+	if Input.is_action_pressed("move_forward"):
+		movement -= camera_basis.z
+	if Input.is_action_pressed("move_back"):
+		movement += camera_basis.z
+	
+	if Input.is_action_pressed("move_left"):
+		movement -= camera_basis.x
+		focus_point -= camera_basis.x * movement_speed * delta
+	if Input.is_action_pressed("move_right"):
+		movement += camera_basis.x
+		focus_point += camera_basis.x * movement_speed * delta
+	
+	if Input.is_action_pressed("move_up"):
+		movement += camera_basis.y
+		focus_point += camera_basis.y * movement_speed * delta
+	if Input.is_action_pressed("move_down"):
+		movement -= camera_basis.y
+		focus_point -= camera_basis.y * movement_speed * delta
+	
+	if Input.is_action_pressed("pan_left"):
+		rotate_y(pan_speed * delta)
+	if Input.is_action_pressed("pan_right"):
+		rotate_y(-pan_speed * delta)
+	
+	if Input.is_action_pressed("orbit_up"):
+		orbit_vertical(orbit_speed * delta)
+	if Input.is_action_pressed("orbit_down"):
+		orbit_vertical(-orbit_speed * delta)
+	
+	if Input.is_action_pressed("orbit_left"):
+		orbit_horizontal(orbit_speed * delta)
+	if Input.is_action_pressed("orbit_right"):
+		orbit_horizontal(-orbit_speed * delta)
+	
+	if Input.is_action_pressed("zoom_in"):
+		adjust_zoom(-zoom_speed)
+	if Input.is_action_pressed("zoom_out"):
+		adjust_zoom(zoom_speed)
+	
+	if movement.length_squared() > 0:
+		movement = movement.normalized() * movement_speed * delta
+		global_position += movement
+	
+	look_at(focus_point)
+
+func process_system_movement(delta):
+	if Input.is_action_pressed("move_up"):
+		orbit_vertical(orbit_speed * delta)
+	if Input.is_action_pressed("move_down"):
+		orbit_vertical(-orbit_speed * delta)
+	
+	if Input.is_action_pressed("move_left"):
+		orbit_horizontal(orbit_speed * delta)
+	if Input.is_action_pressed("move_right"):
+		orbit_horizontal(-orbit_speed * delta)
+	
+	if Input.is_action_pressed("zoom_in"):
+		adjust_zoom(-zoom_speed)
+	if Input.is_action_pressed("zoom_out"):
+		adjust_zoom(zoom_speed)
+
+func orbit_horizontal(angle: float):
+	var orbital_transform = Transform3D().rotated(Vector3.UP, angle)
+	global_position = orbital_transform * (global_position - focus_point) + focus_point
+	look_at(focus_point)
+
+func orbit_vertical(angle: float):
+	var right = global_transform.basis.x
+	var orbital_transform = Transform3D().rotated(right, angle)
+	global_position = orbital_transform * (global_position - focus_point) + focus_point
+	look_at(focus_point)
 
 func adjust_zoom(zoom_delta: float):
 	var new_zoom = clamp(current_zoom + zoom_delta, min_zoom, max_zoom)
 	if new_zoom != current_zoom:
 		current_zoom = new_zoom
 		emit_signal("zoom_changed", current_zoom)
+		# Adjust actual camera position based on zoom
+		var direction = (global_position - focus_point).normalized()
+		global_position = focus_point + direction * (100 * current_zoom)
+
+func set_focus(new_focus: Vector3):
+	if is_transitioning:
+		# If already transitioning, immediately end current transition
+		_end_transition()
+	
+	start_focus = focus_point
+	target_focus = new_focus
+	
+	# We no longer change the camera position
+	is_transitioning = true
+	transition_timer = 0.0
+
+func set_view_type(type: int):
+	view_type = type
 
 func _process(delta):
-	var input_dir = Vector3.ZERO
-	var camera_basis = global_transform.basis
-	
-	# Forward/Backward
-	if Input.is_action_pressed("move_forward"):
-		input_dir -= camera_basis.z
-	if Input.is_action_pressed("move_back"):
-		input_dir += camera_basis.z
-	
-	# Left/Right
-	if Input.is_action_pressed("move_left"):
-		input_dir -= camera_basis.x
-	if Input.is_action_pressed("move_right"):
-		input_dir += camera_basis.x
-	
-	# Up/Down
-	if Input.is_action_pressed("move_up"):
-		input_dir += camera_basis.y
-	if Input.is_action_pressed("move_down"):
-		input_dir -= camera_basis.y
-	
-	# Normalize the input direction and apply movement
-	if input_dir.length_squared() > 0:
-		input_dir = input_dir.normalized()
-		global_position += input_dir * movement_speed * delta
+	if is_transitioning:
+		transition_timer += delta
+		var t = transition_timer / transition_duration
+		
+		if t >= 1.0:
+			_end_transition()
+		else:
+			# Use smoothstep for easing
+			t = smoothstep(0.0, 1.0, t)
+			focus_point = start_focus.lerp(target_focus, t)
+			look_at(focus_point)
+	else:
+		match view_type:
+			0:  # Galaxy view
+				process_galaxy_movement(delta)
+			1, 2:  # System or Object view
+				process_system_movement(delta)
 
-func set_orbit_target(target_position: Vector3):
-	orbit_target = target_position
+# Add this helper function
+func _end_transition():
+	is_transitioning = false
+	look_at(focus_point)
+
+# Helper function for smooth interpolation
+func smoothstep(edge0: float, edge1: float, x: float) -> float:
+	var t = clamp((x - edge0) / (edge1 - edge0), 0.0, 1.0)
+	return t * t * (3.0 - 2.0 * t)

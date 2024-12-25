@@ -1,3 +1,4 @@
+using Godot;
 using System;
 using System.Collections.Generic;
 using Generator;
@@ -14,24 +15,19 @@ public class StarEvolution
 		}
 
 		var ageData = Roll.Search(StarsData.STELLAR_AGE) as double[];
-		if (ageData != null && ageData.Length >= 3)
-		{
-			float baseAge = (float)ageData[0];
-			float ageModifier1 = (float)ageData[1];
-			float ageModifier2 = (float)ageData[2];
 
-			return Roll.Vary(baseAge +
-							 Roll.Dice(1, 6, -1) * ageModifier1 +
-							 Roll.Dice(1, 6, -1) * ageModifier2);
-		}
+		float baseAge = (float)ageData[0];
+		float ageModifier1 = (float)ageData[1];
+		float ageModifier2 = (float)ageData[2];
 
-		Console.WriteLine($"Invalid age data for star mass {starMass}");
-		return 1.0f;
+		return Roll.Vary(baseAge +
+						 Roll.Dice(1, 6, -1) * ageModifier1 +
+						 Roll.Dice(1, 6, -1) * ageModifier2);
 	}
 
 	private float CalculateMassiveStarAge(float starMass)
 	{
-		string massStr = Math.Round(starMass).ToString();
+		int massStr = (int)Math.Round(starMass);
 		var massData = Roll.Search(StarsData.MASSIVE_STARS, massStr) as Dictionary<string, object>;
 		
 		if (massData != null && massData.ContainsKey("Stable Span"))
@@ -47,14 +43,17 @@ public class StarEvolution
 	public string DetermineEvolutionaryStage(float mass, float age)
 	{
 		int massroll = (int)(mass * 1000);
-		string massStr = Roll.Search(StarsData.STELLAR_VAR, massroll).ToString();
-
+		string massStr = Roll.Seek(StarsData.STELLAR_VAR, massroll).ToString();
+		GD.Print($"MassString: {massStr}");
 		var evolutionData = Roll.Search<Dictionary<string, object>>(StarsData.STELLAR_EVOLUTION, massStr);
 		if (evolutionData != null)
 		{
 			float mainSequenceSpan = evolutionData.ContainsKey("M-Span") ? Convert.ToSingle(evolutionData["M-Span"]) : float.PositiveInfinity;
+			GD.Print($"M-span: {mainSequenceSpan}");
 			float subgiantSpan = evolutionData.ContainsKey("S-Span") ? Convert.ToSingle(evolutionData["S-Span"]) : float.PositiveInfinity;
+			GD.Print($"S-span: {subgiantSpan}");
 			float giantSpan = evolutionData.ContainsKey("G-Span") ? Convert.ToSingle(evolutionData["G-Span"]) : float.PositiveInfinity;
+			GD.Print($"G-span: {giantSpan}");
 
 			if (age <= mainSequenceSpan)
 			{

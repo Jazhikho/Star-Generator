@@ -43,7 +43,7 @@ public class SystemGenerator
 			GD.Print($"Creating star {i} of {starCount}");
 			var starGenerator = new StarGenerator(i, massCap);
 			var starData = starGenerator.StarData;
-			GD.Print($"Star Data: {starData}");
+			GD.Print($"Star Data: {starData.Luminosity}");
 			if (starData != null)
 			{
 				Stars.Add(starData);

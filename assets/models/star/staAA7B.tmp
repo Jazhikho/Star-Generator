@@ -1,0 +1,28 @@
+[gd_scene load_steps=5 format=3 uid="uid://loksnlsh7qe5"]
+
+[ext_resource type="Script" path="res://assets/models/star/star_model.gd" id="1_mwlxd"]
+[ext_resource type="Material" uid="uid://d3hri61sl5tbh" path="res://assets/models/star/star_material.tres" id="2_sefvd"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_sx5q6"]
+material = ExtResource("2_sefvd")
+
+[sub_resource type="Curve3D" id="Curve3D_1frdt"]
+
+[node name="StarModel" type="Node3D"]
+script = ExtResource("1_mwlxd")
+
+[node name="star" type="MeshInstance3D" parent="."]
+mesh = SubResource("SphereMesh_sx5q6")
+
+[node name="OrbitPath" type="Path3D" parent="."]
+curve = SubResource("Curve3D_1frdt")
+
+[node name="PathFollow3D" type="PathFollow3D" parent="OrbitPath"]
+
+[node name="OrbitalBodies" type="Node3D" parent="."]
+
+[node name="StarData" type="Node" parent="."]
+
+[node name="OmniLight3D" type="OmniLight3D" parent="."]
+light_energy = 10.0
+omni_range = 150.0

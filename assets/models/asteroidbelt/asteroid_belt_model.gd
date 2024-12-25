@@ -1,18 +1,29 @@
 extends Node3D
 
-@export var inner_radius := 10.0
-@export var outer_radius := 15.0
-@export var asteroid_count := 10000
+@export var inner_radius := 10.0:
+	set(value):
+		inner_radius = value
+		_regenerate_belt()
+
+@export var outer_radius := 15.0:
+	set(value):
+		outer_radius = value
+		_regenerate_belt()
+
+@export var asteroid_count := 10000:
+	set(value):
+		asteroid_count = value
+		_regenerate_belt()
+
 @export var asteroid_scale_min := 0.01
 @export var asteroid_scale_max := 0.1
 @export var texture_variations := 5
 
 var asteroid_mesh_library = []
 var multimesh_instance: MultiMeshInstance3D
-var base_asteroid_count: int
 
 func _ready():
-	base_asteroid_count = asteroid_count
+	print("Asteroid belt ready")
 	load_asteroid_meshes()
 	generate_belt()
 
@@ -29,6 +40,7 @@ func load_asteroid_meshes():
 		dir.list_dir_end()
 
 func generate_belt():
+	print("Generating belt with ", asteroid_count, " asteroids")
 	var multimesh = MultiMesh.new()
 	multimesh.transform_format = MultiMesh.TRANSFORM_3D
 	multimesh.use_colors = true
@@ -38,32 +50,30 @@ func generate_belt():
 		multimesh.mesh = asteroid_mesh_library[randi() % asteroid_mesh_library.size()]
 	else:
 		# Fallback: create a simple rock mesh
-		var mesh = SphereMesh.new()
-		mesh.radius = 1
-		mesh.height = 2
+		var mesh = BoxMesh.new()
+		mesh.size = Vector3(1, 1, 1)
 		multimesh.mesh = mesh
 	
-	var multimesh_instance = MultiMeshInstance3D.new()
+	multimesh_instance = MultiMeshInstance3D.new()
 	multimesh_instance.multimesh = multimesh
+	add_child(multimesh_instance)
 	
 	for i in range(asteroid_count):
 		var angle = randf() * 2 * PI
 		var radius = randf_range(inner_radius, outer_radius)
 		var x = radius * cos(angle)
 		var z = radius * sin(angle)
-		var y = randf() * 0.5 - 0.25  # Small variation in Y
+		var y = randf_range(-1, 1)  # Add some vertical spread
 		
 		var pos = Vector3(x, y, z)
 		var scale = Vector3.ONE * randf_range(asteroid_scale_min, asteroid_scale_max)
-		var basis = Basis().rotated(Vector3.RIGHT, randf() * PI).rotated(Vector3.UP, randf() * PI)
+		var basis = Basis().rotated(Vector3.UP, randf() * 2 * PI)
 		
 		var transform = Transform3D(basis, pos)
 		transform = transform.scaled(scale)
 		
 		multimesh.set_instance_transform(i, transform)
 		multimesh.set_instance_color(i, get_asteroid_color())
-	
-	add_child(multimesh_instance)
 
 func get_asteroid_color() -> Color:
 	var variation = randi() % texture_variations
@@ -77,24 +87,18 @@ func get_asteroid_color() -> Color:
 func update_level_of_detail(distance: float):
 	if !multimesh_instance or !multimesh_instance.multimesh:
 		return
-		
-	# Define distance thresholds
-	const CLOSE_DISTANCE = 50.0
-	const MID_DISTANCE = 150.0
-	const FAR_DISTANCE = 300.0
 	
-	var visible_percentage: float
-	if distance < CLOSE_DISTANCE:
-		visible_percentage = 1.0  # 100% visible
-	elif distance < MID_DISTANCE:
-		visible_percentage = lerp(1.0, 0.5, (distance - CLOSE_DISTANCE) / (MID_DISTANCE - CLOSE_DISTANCE))
-	elif distance < FAR_DISTANCE:
-		visible_percentage = lerp(0.5, 0.1, (distance - MID_DISTANCE) / (FAR_DISTANCE - MID_DISTANCE))
-	else:
-		visible_percentage = 0.1  # Minimum 10% visible
-	
-	var new_count = int(base_asteroid_count * visible_percentage)
+	var visible_percentage = clamp(1.0 - (distance / 1000.0), 0.1, 1.0)
+	var new_count = int(asteroid_count * visible_percentage)
 	new_count = max(new_count, 100)  # Ensure at least 100 asteroids are always visible
 	
 	if multimesh_instance.multimesh.instance_count != new_count:
 		multimesh_instance.multimesh.instance_count = new_count
+
+func _regenerate_belt():
+	# Only regenerate if we're in the scene tree
+	if is_inside_tree():
+		# Clear existing multimesh instance if it exists
+		if multimesh_instance:
+			multimesh_instance.queue_free()
+		generate_belt()

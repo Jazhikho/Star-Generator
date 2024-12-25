@@ -1,26 +1,22 @@
-[gd_scene load_steps=6 format=3 uid="uid://bmtr8mp74oran"]
+[gd_scene load_steps=5 format=3 uid="uid://bmhk4a4nhbort"]
 
-[ext_resource type="Script" path="res://Test/test.gd" id="1_xjcyf"]
-[ext_resource type="Texture2D" uid="uid://8f8uyrgil804" path="res://assets/textures/2k_stars.jpg" id="2_dsgx0"]
-
-[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_qxums"]
-panorama = ExtResource("2_dsgx0")
-
-[sub_resource type="Sky" id="Sky_wcc46"]
-sky_material = SubResource("PanoramaSkyMaterial_qxums")
-
-[sub_resource type="Environment" id="Environment_08ycd"]
-background_mode = 2
-sky = SubResource("Sky_wcc46")
+[ext_resource type="Script" path="res://Test/test.gd" id="1_5et3v"]
+[ext_resource type="Script" path="res://scenes/SystemView/system_view.gd" id="2_g25do"]
+[ext_resource type="Script" path="res://assets/global/camera_3d.gd" id="2_r54ww"]
+[ext_resource type="PackedScene" uid="uid://loksnlsh7qe5" path="res://assets/models/star/star_model.tscn" id="4_dx11j"]
 
 [node name="Test" type="Node3D"]
-script = ExtResource("1_xjcyf")
+script = ExtResource("1_5et3v")
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.707107, 0.707107, 0, -0.707107, 0.707107, 0, 2, 3)
+transform = Transform3D(1, 0, 0, 0, 0.829038, 0.559193, 0, -0.559193, 0.829038, 0, 1.02126, 1.73188)
+script = ExtResource("2_r54ww")
 
-[node name="Node3D" type="Node3D" parent="."]
-visible = false
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="Node3D"]
-environment = SubResource("Environment_08ycd")
+[node name="SystemView" type="Node3D" parent="."]
+script = ExtResource("2_g25do")
+
+[node name="PrimaryStar" parent="SystemView" instance=ExtResource("4_dx11j")]
+
+[node name="OtherStars" type="Node3D" parent="SystemView/PrimaryStar"]

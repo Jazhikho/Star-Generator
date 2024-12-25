@@ -124,29 +124,32 @@ public class StarGenerator
 		float age = starEvolution.CalculateAge(mass);
 		GD.Print($"Star Age = {age}");
 		string evolutionaryStage = starEvolution.DetermineEvolutionaryStage(mass, age);
-		
+		GD.Print($"Star Evo Stage = {evolutionaryStage}");
 		stellarParams = new StellarParameters();
 		var starParams = stellarParams.GetStellarParameters(mass, "MAIN_SEQUENCE");
 		string spectralType = starParams.ContainsKey("Type") ? (string)starParams["Type"] : "Unknown";
 
 		float luminosity, temperature, radius;
 		int luminosityClass;
-
+		GD.Print($"lets adjust the evo stage");
 		switch (evolutionaryStage)
 		{
 			case "SUBGIANT":
+				GD.Print($"Doing Subgiant things");
 				luminosityClass = 4;
 				luminosity = starLuminosity.CalculateSubgiantLuminosity(mass, evolutionaryStage);
 				temperature = starTemperature.CalculateSubgiantTemperature(Convert.ToSingle(starParams["Temperature"]), 0.1f);
 				radius = starRadius.CalculateSubgiantRadius(mass);
 				break;
 			case "GIANT":
+				GD.Print($"Doing Giant things");
 				luminosityClass = 3;
 				luminosity = starLuminosity.CalculateGiantLuminosity(mass, evolutionaryStage);
 				temperature = starTemperature.CalculateGiantTemperature();
 				radius = starRadius.CalculateGiantRadius(mass);
 				break;
 			case "WHITE_DWARF":
+				GD.Print($"Doing white Dwarf things");
 				compactObjectGen = new CompactObjectGenerator();
 				var wdData = compactObjectGen.GenerateWhiteDwarf(mass);
 				luminosityClass = 7;
@@ -156,6 +159,7 @@ public class StarGenerator
 				break;
 			case "MAIN_SEQUENCE":
 			default:
+				GD.Print($"Doing default things");
 				luminosityClass = 5;
 				float minLuminosity = Convert.ToSingle(starParams["L-Min"]);
 				GD.Print($"Calculating main sequence luminosity for mass {massVar}, age {age}, min luminosity {minLuminosity}");

@@ -30,12 +30,6 @@ signal star_selected(star_data: Dictionary)
 signal planet_selected(planet_data: Dictionary)
 
 func _ready():
-	print("ViewManager initializing...")
-	print("Current path:", get_path())
-	print("Parent:", get_parent())
-	print("Children:", get_children())
-	
-	# Wait a frame to ensure all nodes are ready
 	await get_tree().process_frame
 	
 	# Initialize node references
@@ -65,14 +59,6 @@ func _ready():
 	
 	# Setup galaxy view
 	setup_galaxy_view()
-	
-	# Initial camera position
-	var pars = GlobalSettings.galaxy_settings.parsecs
-	var cam_x = GlobalSettings.galaxy_settings.x_sector * pars / 2
-	var cam_y = GlobalSettings.galaxy_settings.y_sector * pars / 2
-	var cam_z = GlobalSettings.galaxy_settings.z_sector * pars / 2
-	camera.position = Vector3(0, cam_y, cam_z)
-	camera.look_at(Vector3(cam_x, cam_y, cam_z))
 	
 	double_click_timer = Timer.new()
 	double_click_timer.wait_time = DOUBLE_CLICK_TIME
@@ -118,33 +104,74 @@ func setup_collision_system():
 		galaxy_view.add_child(collision_sphere)
 		
 func clear_collision_spheres():
+	if !galaxy_view:
+		return
+		
+	var spheres_to_remove = []
 	for child in galaxy_view.get_children():
 		if child is Area3D:
-			child.queue_free()
+			spheres_to_remove.append(child)
+	
+	for sphere in spheres_to_remove:
+		if is_instance_valid(sphere):  # Check if the node is still valid
+			sphere.queue_free()
+
 		
 func transition_to_system_view(system_data: Array):
 	print("Transitioning to system view")
 	current_view = ViewType.SYSTEM
 	
 	if system_view:
-		clear_collision_spheres()  # Clear galaxy view collision spheres
+		# Store current galaxy camera position and rotation for later
+		var original_pos = camera.global_position
+		var original_rot = camera.rotation
+		var original_focus = camera.focus_point
+		
+		# Get the position of the star we're zooming to
+		var star_position = original_focus
+		
+		# Create a tween for zooming into the star
+		var zoom_tween = create_tween()
+		zoom_tween.set_parallel(true)
+		
+		# Calculate a position very close to the star
+		var final_zoom_position = star_position + (camera.global_position - star_position).normalized() * 5
+		
+		# Tween the camera to zoom into the star
+		zoom_tween.tween_property(camera, "global_position", final_zoom_position, 1.0).set_ease(Tween.EASE_IN)
+		zoom_tween.tween_property(camera, "focus_point", star_position, 1.0).set_ease(Tween.EASE_IN)
+		
+		await zoom_tween.finished
+		
+		# Clear galaxy view collision spheres before transitioning
+		clear_collision_spheres()
+		
+		# Set up system view
 		system_view.set_system_data(system_data)
 		system_view.create_system()
 		
-		var tween = create_tween()
-		tween.tween_property(camera, "position", Vector3(0, 50, 100), 1.0)
-		tween.parallel().tween_property(camera, "rotation", Vector3(-PI/6, 0, 0), 1.0)
-		
-		await tween.finished
-		
+		# Hide galaxy view and show system view
 		galaxy_view.visible = false
 		system_view.visible = true
+		
+		# Reset camera for system view
+		camera.global_position = Vector3(0, 50, 100)
+		camera.rotation = Vector3(-PI/6, 0, 0)
+		camera.focus_point = Vector3.ZERO
+		
+		# Store the galaxy view camera data
+		system_view.set_meta("galaxy_camera_data", {
+			"position": original_pos,
+			"rotation": original_rot,
+			"focus": original_focus
+		})
 		
 		emit_signal("view_changed", ViewType.SYSTEM)
 	else:
 		push_error("System view not found!")
 
 func transition_to_object_view(object_data: Dictionary):
+	camera.set_view_type(2)
 	current_view = ViewType.OBJECT
 	
 	var tween = create_tween()
@@ -161,20 +188,47 @@ func transition_to_object_view(object_data: Dictionary):
 func return_to_galaxy_view():
 	current_view = ViewType.GALAXY
 	
-	system_view.clear_system()  # Add this call
-	setup_collision_system()  # Recreate galaxy collision spheres
-	
-	var tween = create_tween()
-	tween.tween_property(camera, "position", Vector3(0, 0, 100), 1.0)
-	tween.parallel().tween_property(camera, "rotation", Vector3.ZERO, 1.0)
-	
-	await tween.finished
-	
-	system_view.visible = false
-	object_view.visible = false
-	galaxy_view.visible = true
-	
-	emit_signal("view_changed", ViewType.GALAXY)
+	if system_view:
+		# Get the stored galaxy camera data
+		var galaxy_camera_data = system_view.get_meta("galaxy_camera_data")
+		
+		# Store current position for the zoom out effect
+		var start_pos = camera.global_position
+		var start_focus = camera.focus_point
+		
+		# Create a tween for zooming out
+		var zoom_tween = create_tween()
+		zoom_tween.set_parallel(true)
+		
+		# Calculate a position far from the current position
+		var far_position = start_pos + (start_pos - start_focus).normalized() * 1000
+		
+		# Tween the camera to zoom out
+		zoom_tween.tween_property(camera, "global_position", far_position, 1.0).set_ease(Tween.EASE_OUT)
+		
+		await zoom_tween.finished
+		
+		system_view.clear_system()
+		
+		# Recreate galaxy collision spheres
+		setup_collision_system()
+		
+		# Hide system view and show galaxy view
+		system_view.visible = false
+		galaxy_view.visible = true
+		
+		# Create a tween for restoring galaxy view
+		var restore_tween = create_tween()
+		restore_tween.set_parallel(true)
+		
+		# Restore the galaxy camera position and rotation
+		restore_tween.tween_property(camera, "global_position", galaxy_camera_data.position, 0.5)
+		restore_tween.tween_property(camera, "rotation", galaxy_camera_data.rotation, 0.5)
+		restore_tween.tween_property(camera, "focus_point", galaxy_camera_data.focus, 0.5)
+		
+		await restore_tween.finished
+		
+		emit_signal("view_changed", ViewType.GALAXY)
 
 func handle_click(event_position: Vector2):
 	# Add time-based cooldown check
@@ -188,10 +242,7 @@ func handle_click(event_position: Vector2):
 	processing_click = true
 	last_process_time = current_time
 	
-	print("ViewManager handling click at:", event_position)
-	
 	if !camera or !space_state:
-		print("No camera reference or space state!")
 		processing_click = false
 		return
 	
@@ -225,6 +276,8 @@ func handle_click(event_position: Vector2):
 
 func handle_single_click(star_data: Dictionary):
 	print("Processing single click")
+	var star_position = star_data["coordinates"]
+	camera.set_focus(star_position)
 	emit_signal("star_selected", star_data)
 
 func handle_double_click(star_data: Dictionary):

@@ -72,6 +72,13 @@ func create_celestial_bodies(star_data: Dictionary, parent_star: Node3D):
 					var planet_node = create_planet(body)
 					parent_star.get_node("OrbitalBodies").add_child(planet_node)
 					
+					# If the planet has rings, create them here
+					if "Rings" in body:
+						print("Creating rings for planet")
+						var ring_node = create_rings(body["Rings"], planet_node)
+						if ring_node:
+							planet_node.add_child(ring_node)
+					
 				"AsteroidBelt":
 					print("Creating asteroid belt")
 					var belt_node = create_asteroid_belt(body, star_data)
@@ -80,6 +87,20 @@ func create_celestial_bodies(star_data: Dictionary, parent_star: Node3D):
 						parent_star.get_node("OrbitalBodies").add_child(belt_node)
 					else:
 						print("Failed to create belt node")
+						
+func create_rings(ring_data: Dictionary, planet_node: Node3D) -> Node3D:
+	var ring = asteroid_belt_scene.instantiate()
+	
+	# Set ring properties
+	var planet_radius = planet_node.planet_radius  # Assuming this exists
+	ring.inner_radius = planet_radius * 1.5  # Adjust these values as needed
+	ring.outer_radius = planet_radius * 2.5
+	ring.asteroid_count = ring_data.get("Density", 5000)  # Adjust default as needed
+	
+	# Position the ring relative to the planet
+	ring.position = Vector3.ZERO
+	
+	return ring
 
 func setup_star(star_node: Node3D, star_data: Dictionary):
 	star_node.initialize(star_data)
@@ -113,30 +134,54 @@ func create_planet(planet_data: Dictionary) -> Node3D:
 	return planet
 
 func clear_system():
-	# Clear all celestial bodies and their collision spheres
+	if !is_inside_tree():  # Check if the node is still in the scene tree
+		return
+		
 	if primary_star:
 		if primary_star.has_node("OrbitalBodies"):
-			for child in primary_star.get_node("OrbitalBodies").get_children():
-				child.queue_free()
+			var orbital_bodies = primary_star.get_node("OrbitalBodies")
+			for child in orbital_bodies.get_children():
+				if is_instance_valid(child):  # Check if the node is still valid
+					child.queue_free()
 		if primary_star.has_node("OtherStars"):
-			for child in primary_star.get_node("OtherStars").get_children():
-				child.queue_free()
+			var other_stars = primary_star.get_node("OtherStars")
+			for child in other_stars.get_children():
+				if is_instance_valid(child):  # Check if the node is still valid
+					child.queue_free()
 
 func setup_planet_collision(planet_node: Node3D, planet_data: Dictionary):
+	# Make sure any existing collision sphere is removed
+	var existing_collision = planet_node.get_node_or_null("CollisionSphere")
+	if existing_collision:
+		existing_collision.queue_free()
+	
 	var collision_sphere = Area3D.new()
+	collision_sphere.name = "CollisionSphere"
 	var collision_shape = CollisionShape3D.new()
 	var sphere_shape = SphereShape3D.new()
 	
 	sphere_shape.radius = 2.0  # Adjust as needed
 	collision_shape.shape = sphere_shape
 	collision_sphere.add_child(collision_shape)
+	collision_sphere.visible = false
 	collision_sphere.collision_layer = 1
 	collision_sphere.collision_mask = 1
 	collision_sphere.set_meta("planet_data", planet_data)
 	
+	# Connect the input event
+	collision_sphere.input_event.connect(_on_planet_clicked.bind(planet_data))
+	
+	# Parent to the planet node so it moves with it
 	planet_node.add_child(collision_sphere)
+	
+func _on_planet_clicked(_camera: Node, event: InputEvent, _click_position: Vector3, _click_normal: Vector3, _shape_idx: int, planet_data: Dictionary):
+	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+		print("Planet clicked:", planet_data)
+		# Handle single/double click logic here
+		emit_signal("planet_selected", planet_data)
 
 func create_asteroid_belt(belt_data: Dictionary, star_data: Dictionary) -> Node3D:
+	print("Creating asteroid belt")
 	var belt = asteroid_belt_scene.instantiate()
 	
 	# Set belt properties

@@ -1,0 +1,187 @@
+[gd_scene load_steps=12 format=3 uid="uid://e1h6c0vjcquv"]
+
+[ext_resource type="Script" path="res://assets/global/main.gd" id="1_a2gs7"]
+[ext_resource type="Script" path="res://assets/global/view_manager.gd" id="2_custom"]
+[ext_resource type="Script" path="res://assets/global/camera_3d.gd" id="3_0b68k"]
+[ext_resource type="PackedScene" uid="uid://b0nt4n13a6448" path="res://assets/Starlight/Stars.tscn" id="4_y5kv4"]
+[ext_resource type="PackedScene" uid="uid://loksnlsh7qe5" path="res://assets/models/star/star_model.tscn" id="5_3j57e"]
+[ext_resource type="Script" path="res://scenes/SystemView/system_view.gd" id="5_s4wvt"]
+[ext_resource type="PackedScene" uid="uid://bcvia2tmcrmns" path="res://assets/models/planet/planet_model.tscn" id="6_ld4uf"]
+[ext_resource type="Texture2D" uid="uid://b22vc5eurd7xx" path="res://assets/textures/2k_stars_milky_way.jpg" id="7_703xk"]
+
+[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_ywofr"]
+panorama = ExtResource("7_703xk")
+
+[sub_resource type="Sky" id="Sky_0ptqy"]
+sky_material = SubResource("PanoramaSkyMaterial_ywofr")
+
+[sub_resource type="Environment" id="Environment_k45vj"]
+background_mode = 2
+sky = SubResource("Sky_0ptqy")
+
+[node name="Main" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_a2gs7")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="TopBar" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="MainMenuButton" type="Button" parent="VBoxContainer/TopBar"]
+layout_mode = 2
+text = "Main Menu"
+
+[node name="ViewControls" type="HBoxContainer" parent="VBoxContainer/TopBar"]
+layout_mode = 2
+
+[node name="AnomalyToggle" type="CheckButton" parent="VBoxContainer/TopBar/ViewControls"]
+layout_mode = 2
+toggle_mode = false
+text = "Anomalies"
+
+[node name="JumpRouteToggle" type="CheckButton" parent="VBoxContainer/TopBar/ViewControls"]
+layout_mode = 2
+toggle_mode = false
+text = "Jump Routes"
+
+[node name="PopulatedToggle" type="CheckButton" parent="VBoxContainer/TopBar/ViewControls"]
+layout_mode = 2
+toggle_mode = false
+text = "Populated"
+
+[node name="GenerateJumpRoutesButton" type="Button" parent="VBoxContainer/TopBar/ViewControls"]
+layout_mode = 2
+text = "Generate Jump Routes"
+
+[node name="SceneView" type="SubViewportContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+stretch = true
+
+[node name="SubViewport" type="SubViewport" parent="VBoxContainer/SceneView"]
+handle_input_locally = false
+size = Vector2i(1152, 578)
+render_target_update_mode = 4
+
+[node name="ViewManager" type="Node3D" parent="VBoxContainer/SceneView/SubViewport"]
+script = ExtResource("2_custom")
+
+[node name="Camera3D" type="Camera3D" parent="VBoxContainer/SceneView/SubViewport/ViewManager"]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 50)
+script = ExtResource("3_0b68k")
+
+[node name="GalaxyView" type="Node3D" parent="VBoxContainer/SceneView/SubViewport/ViewManager"]
+unique_name_in_owner = true
+
+[node name="StarManager" parent="VBoxContainer/SceneView/SubViewport/ViewManager/GalaxyView" instance=ExtResource("4_y5kv4")]
+
+[node name="SystemView" type="Node3D" parent="VBoxContainer/SceneView/SubViewport/ViewManager"]
+unique_name_in_owner = true
+visible = false
+script = ExtResource("5_s4wvt")
+
+[node name="PrimaryStar" parent="VBoxContainer/SceneView/SubViewport/ViewManager/SystemView" instance=ExtResource("5_3j57e")]
+
+[node name="OtherStars" type="Node3D" parent="VBoxContainer/SceneView/SubViewport/ViewManager/SystemView/PrimaryStar"]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="VBoxContainer/SceneView/SubViewport/ViewManager/SystemView"]
+transform = Transform3D(1, 0, 0, 0, 1.19249e-08, 1, 0, -1, 1.19249e-08, 0, 6.35356, 0)
+light_energy = 0.1
+
+[node name="ObjectView" type="Node3D" parent="VBoxContainer/SceneView/SubViewport/ViewManager"]
+unique_name_in_owner = true
+visible = false
+
+[node name="PlanetModel" parent="VBoxContainer/SceneView/SubViewport/ViewManager/ObjectView" instance=ExtResource("6_ld4uf")]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="VBoxContainer/SceneView/SubViewport/ViewManager/ObjectView"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.24236, 0)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="VBoxContainer/SceneView/SubViewport/ViewManager"]
+environment = SubResource("Environment_k45vj")
+
+[node name="CameraControls" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="ZoomIn" type="Button" parent="VBoxContainer/CameraControls"]
+layout_mode = 2
+text = "Zoom In"
+
+[node name="ZoomOut" type="Button" parent="VBoxContainer/CameraControls"]
+layout_mode = 2
+text = "Zoom Out"
+
+[node name="RotateLeft" type="Button" parent="VBoxContainer/CameraControls"]
+layout_mode = 2
+text = "Pan Left"
+
+[node name="RotateRight" type="Button" parent="VBoxContainer/CameraControls"]
+layout_mode = 2
+text = "Pan Right"
+
+[node name="InfoPanel" type="PanelContainer" parent="."]
+custom_minimum_size = Vector2(300, 300)
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -300.0
+offset_bottom = 300.0
+grow_horizontal = 0
+
+[node name="InfoContent" type="VBoxContainer" parent="InfoPanel"]
+layout_mode = 2
+
+[node name="InfoTitle" type="Label" parent="InfoPanel/InfoContent"]
+layout_mode = 2
+
+[node name="InfoText" type="RichTextLabel" parent="InfoPanel/InfoContent"]
+layout_mode = 2
+size_flags_vertical = 3
+bbcode_enabled = true
+
+[node name="MenuPanel" type="PanelContainer" parent="."]
+visible = false
+z_index = 3
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -250.0
+offset_right = 200.0
+offset_bottom = 250.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 8
+size_flags_vertical = 0
+mouse_filter = 1
+
+[node name="CloseButton" type="Button" parent="MenuPanel"]
+z_index = 1
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 0
+text = "X"
+
+[node name="MenuContainer" type="MarginContainer" parent="MenuPanel"]
+z_index = 1
+layout_mode = 2
+mouse_filter = 0

@@ -73,7 +73,7 @@ stretch = true
 
 [node name="SubViewport" type="SubViewport" parent="VBoxContainer/SceneView"]
 handle_input_locally = false
-size = Vector2i(1152, 578)
+size = Vector2i(2, 2)
 render_target_update_mode = 4
 
 [node name="ViewManager" type="Node3D" parent="VBoxContainer/SceneView/SubViewport"]
@@ -88,6 +88,7 @@ script = ExtResource("3_0b68k")
 unique_name_in_owner = true
 
 [node name="StarManager" parent="VBoxContainer/SceneView/SubViewport/ViewManager/GalaxyView" instance=ExtResource("4_y5kv4")]
+shader_params/size_multiplier = 1.0
 
 [node name="SystemView" type="Node3D" parent="VBoxContainer/SceneView/SubViewport/ViewManager"]
 unique_name_in_owner = true

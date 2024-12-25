@@ -10,6 +10,9 @@ enum ViewType {OBJECT, SYSTEM}
 @export var is_moon := false
 @export var speed_scale := 8760
 
+var ring_node: Node3D
+@onready var rings = preload("res://assets/models/asteroidbelt/asteroid_belt_model.tscn")
+
 @export var surface_color : Color = Color.WHITE
 @export var atmosphere_color : Color = Color(0.3, 0.7, 1.0, 0.5)
 @export var has_atmosphere := false
@@ -26,6 +29,7 @@ const PLANET_SCALE_FACTOR = 1
 var planet_data
 var texture_variation : int = 1
 var parent_body = null
+
 var texture_paths = {
 	"Acheronian": "res://assets/textures/planets/acheronian/",
 	"Arean": "res://assets/textures/planets/arean/",
@@ -69,8 +73,13 @@ func deferred_setup(view_type: ViewType, data: Dictionary):
 	setup_planet()
 	setup_orbit()
 	
-	if "Satellites" in data:
-		setup_moons(data["Satellites"])
+	if "Satellites" in data and !data["Satellites"].is_empty():
+		# Check if the first satellite is a ring system
+		var first_satellite = data["Satellites"][0]
+		if first_satellite.get("Type") == "Rings":
+			setup_rings(first_satellite)
+		
+		# Handle other satellites (moons)
 		setup_moons(data["Satellites"])
 		
 func setup_planet():
@@ -78,7 +87,7 @@ func setup_planet():
 	planet_mesh.mesh.radius = scaled_radius
 	planet_mesh.mesh.height = scaled_radius * 2
 
-	setup_atmosphere()
+	#setup_atmosphere()
 	setup_appearance()
 
 func setup_atmosphere():
@@ -143,11 +152,6 @@ func setup_moons(satellites: Array):
 			else:
 				for moon_data in satellite["NestedList"]:
 					create_moon(moon_data)
-		elif satellite.has("Type") and satellite["Type"] == "Rings":
-			print("Rings found")
-			create_rings(satellite)
-		else:
-			print("Unrecognized satellite type: ", satellite)
 
 func create_moon(moon_data: Dictionary):
 	var moon = load("res://assets/models/planet/planet_model.tscn").instantiate()
@@ -168,16 +172,19 @@ func create_moon(moon_data: Dictionary):
 	
 	return moon_orbit_container
 	
-func create_rings(ring_data: Dictionary):
-	var ring = MeshInstance3D.new()
-	var ring_mesh = TorusMesh.new()
+func setup_rings(ring_data: Dictionary):
+	var ring = rings.instantiate()
 	
-	ring_mesh.inner_radius = ring_data.get("InnerOrbit", 0.5)
-	ring_mesh.outer_radius = ring_data.get("OuterOrbit", 1)
-	ring_mesh.rings = 64
-	ring_mesh.ring_segments = 8
+	# Set ring properties relative to planet size
+	if ring_data["RingType"] == "Simple":
+		ring.inner_radius = ring_data.get("Orbit") * scale.x * 0.975
+		ring.outer_radius = ring_data.get("Orbit") * scale.x * 1.025
+	else:
+		ring.inner_radius = ring_data.get("InnerOrbit") * scale.x
+		ring.outer_radius = ring_data.get("OuterOrbit") * scale.x
 	
-	ring.mesh = ring_mesh
+	ring.asteroid_count = 1000  # Lower count for planet rings
+	
 	add_child(ring)
 
 func load_random_texture(p_class: String) -> Texture:

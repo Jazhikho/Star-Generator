@@ -1,144 +1,16 @@
-[gd_scene load_steps=20 format=3 uid="uid://loksnlsh7qe5"]
+[gd_scene load_steps=4 format=3 uid="uid://loksnlsh7qe5"]
 
 [ext_resource type="Script" path="res://assets/models/star/star_model.gd" id="1_mwlxd"]
-[ext_resource type="Shader" path="res://assets/models/star/star_core.gdshader" id="2_dwphl"]
-[ext_resource type="Shader" path="res://assets/models/star/star_atmosphere.gdshader" id="3_cfnvj"]
-[ext_resource type="Shader" path="res://assets/models/star/star_flare.gdshader" id="4_btsr2"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_ed0m6"]
-shader = ExtResource("2_dwphl")
-shader_parameter/brightness = 1.5
-shader_parameter/ray_brightness = 10.0
-shader_parameter/gamma = 8.0
-shader_parameter/spot_brightness = 15.0
-shader_parameter/ray_density = 3.5
-shader_parameter/curvature = 15.0
-shader_parameter/rgb = Vector3(4, 1, 0.1)
-shader_parameter/sin_freq = 13.0
-
-[sub_resource type="SphereMesh" id="SphereMesh_1q6jr"]
-material = SubResource("ShaderMaterial_ed0m6")
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_urjyr"]
-transparency = 1
-shading_mode = 0
-vertex_color_use_as_albedo = true
-
-[sub_resource type="SphereMesh" id="SphereMesh_1674n"]
-material = SubResource("StandardMaterial3D_urjyr")
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_r6ooq"]
-render_priority = 0
-shader = ExtResource("3_cfnvj")
-shader_parameter/star_color = Color(1, 1, 1, 1)
-shader_parameter/time = null
-
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_3ceau"]
-lifetime_randomness = 0.1
-particle_flag_disable_z = true
-emission_shape = 1
-emission_sphere_radius = 1.0
-radial_velocity_min = -2.23517e-05
-radial_velocity_max = 0.499978
-gravity = Vector3(0, 0, 0)
-hue_variation_min = -0.03
-hue_variation_max = 0.03
-turbulence_enabled = true
-turbulence_noise_strength = 1.22
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_uh3eb"]
-transparency = 1
-shading_mode = 0
-vertex_color_use_as_albedo = true
-texture_filter = 1
-billboard_mode = 3
-particles_anim_h_frames = 1
-particles_anim_v_frames = 1
-particles_anim_loop = false
-
-[sub_resource type="QuadMesh" id="QuadMesh_jgn7x"]
-lightmap_size_hint = Vector2i(4, 4)
-material = SubResource("StandardMaterial3D_uh3eb")
-size = Vector2(0.4, 0.45)
-
-[sub_resource type="Gradient" id="Gradient_po66j"]
-offsets = PackedFloat32Array(0.127273, 0.781818)
-
-[sub_resource type="GradientTexture1D" id="GradientTexture1D_nxijo"]
-gradient = SubResource("Gradient_po66j")
-
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_aohfi"]
-lifetime_randomness = 0.17
-particle_flag_align_y = true
-direction = Vector3(0, 0, 0)
-spread = 5.0
-initial_velocity_min = 1.0
-initial_velocity_max = 2.0
-gravity = Vector3(0, -0.02, 0)
-scale_min = 0.05
-scale_max = 0.15
-color_ramp = SubResource("GradientTexture1D_nxijo")
-turbulence_enabled = true
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bvoc0"]
-transparency = 1
-shading_mode = 0
-vertex_color_use_as_albedo = true
-billboard_mode = 3
-particles_anim_h_frames = 1
-particles_anim_v_frames = 1
-particles_anim_loop = false
-
-[sub_resource type="QuadMesh" id="QuadMesh_yvqod"]
-material = SubResource("StandardMaterial3D_bvoc0")
-size = Vector2(0.1, 1)
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_ed3ee"]
-render_priority = 0
-shader = ExtResource("4_btsr2")
-shader_parameter/star_color = Color(1, 1, 1, 1)
-shader_parameter/intensity = 2.0
+[sub_resource type="SphereMesh" id="SphereMesh_7mpek"]
 
 [sub_resource type="Curve3D" id="Curve3D_1frdt"]
 
 [node name="StarModel" type="Node3D"]
 script = ExtResource("1_mwlxd")
 
-[node name="CoreMesh" type="MeshInstance3D" parent="."]
-mesh = SubResource("SphereMesh_1q6jr")
-
-[node name="AtmosphereMesh" type="MeshInstance3D" parent="."]
-mesh = SubResource("SphereMesh_1674n")
-surface_material_override/0 = SubResource("ShaderMaterial_r6ooq")
-
-[node name="CoronaParticles" type="GPUParticles3D" parent="."]
-amount = 10000
-amount_ratio = 0.5
-lifetime = 0.07
-preprocess = 0.88
-speed_scale = 0.1
-explosiveness = 0.1
-randomness = 0.5
-trail_lifetime = 0.4
-process_material = SubResource("ParticleProcessMaterial_3ceau")
-draw_pass_1 = SubResource("QuadMesh_jgn7x")
-
-[node name="ProminenceParticles" type="GPUParticles3D" parent="."]
-visible = false
-amount = 90
-lifetime = 0.78
-speed_scale = 0.1
-explosiveness = 0.1
-randomness = 0.17
-trail_enabled = true
-trail_lifetime = 0.99
-process_material = SubResource("ParticleProcessMaterial_aohfi")
-draw_pass_1 = SubResource("QuadMesh_yvqod")
-
-[node name="FlareMesh" type="MeshInstance3D" parent="."]
-cast_shadow = 2
-mesh = SubResource("SphereMesh_1q6jr")
-surface_material_override/0 = SubResource("ShaderMaterial_ed3ee")
+[node name="star" type="MeshInstance3D" parent="."]
+mesh = SubResource("SphereMesh_7mpek")
 
 [node name="OrbitPath" type="Path3D" parent="."]
 curve = SubResource("Curve3D_1frdt")
@@ -148,3 +20,7 @@ curve = SubResource("Curve3D_1frdt")
 [node name="OrbitalBodies" type="Node3D" parent="."]
 
 [node name="StarData" type="Node" parent="."]
+
+[node name="OmniLight3D" type="OmniLight3D" parent="."]
+light_energy = 10.0
+omni_range = 150.0
