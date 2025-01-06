@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://buhmpe88e61kg"]
+
+[ext_resource type="Script" path="res://assets/models/system/system_model.gd" id="1_co7m1"]
+
+[node name="SystemModel" type="Node3D"]
+script = ExtResource("1_co7m1")
+
+[node name="PrimarySubSystem" type="Node3D" parent="."]
+
+[node name="SecondarySubSystem" type="Node3D" parent="."]

@@ -1,4 +1,3 @@
-using Godot;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
@@ -27,8 +26,20 @@ namespace Generator
 		public float Eccentricity { get; set; }
 		public float? MinSeparation { get; set; }
 		public float? MaxSeparation { get; set; }
+		public List<Vector3> OrbitalPath { get; set; }
 		public float OrbitalPeriod { get; set; }
 		public OrbitalLimitsData OrbitalLimits { get; set; }
+	}
+
+	public class OrbitalSystem
+	{
+		public List<Vector3> SystemPath { get; set; } = new List<Vector3>();
+		public OrbitalSystem Primary { get; set; }
+		public OrbitalSystem Secondary { get; set; }
+		public StarData Star { get; set; }  // Only set for the lowest level
+		public float CombinedMass { get; set; }
+		public float HierarchicalSeparation { get; set; }
+		public float HierarchicalEccentricity { get; set; }
 	}
 
 	public class OrbitalLimitsData
@@ -37,7 +48,7 @@ namespace Generator
 		public float Outer { get; set; }
 		public float SnowLine { get; set; }
 	}
-	
+
 	public struct OrbitalData
 	{
 		public float Eccentricity;
@@ -75,13 +86,13 @@ namespace Generator
 		public string Category;
 		public float Multiplier;
 	}
-	
+
 	public struct BiochemistryData
 	{
 		public string Biosphere;
 		public string Chemistry;
 	}
-	
+
 	public struct BrownDwarfData
 	{
 		public float Luminosity;
@@ -106,7 +117,7 @@ namespace Generator
 		public float Radius;
 		public string SpectralType;
 	}
-	
+
 	public struct PlanetBasicsData
 	{
 		public int Size;
@@ -116,7 +127,7 @@ namespace Generator
 		public float Mass;
 		public float Gravity;
 	}
-	
+
 	public struct PlanetaryData
 	{
 		public string SpectralType;
@@ -153,7 +164,7 @@ namespace Generator
 		public string VolcanicActivity;
 		public string TectonicActivity;
 	}
-	
+
 	public struct AtmosphereData
 	{
 		public int Atmosphere;

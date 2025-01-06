@@ -1,8 +1,8 @@
 [gd_scene load_steps=5 format=3 uid="uid://bmhk4a4nhbort"]
 
 [ext_resource type="Script" path="res://Test/test.gd" id="1_5et3v"]
-[ext_resource type="Script" path="res://scenes/SystemView/system_view.gd" id="2_g25do"]
-[ext_resource type="Script" path="res://assets/global/camera_3d.gd" id="2_r54ww"]
+[ext_resource type="Script" path="res://scenes/GUI/system_view.gd" id="2_g25do"]
+[ext_resource type="Script" path="res://scenes/GUI/camera_3d.gd" id="2_r54ww"]
 [ext_resource type="PackedScene" uid="uid://loksnlsh7qe5" path="res://assets/models/star/star_model.tscn" id="4_dx11j"]
 
 [node name="Test" type="Node3D"]

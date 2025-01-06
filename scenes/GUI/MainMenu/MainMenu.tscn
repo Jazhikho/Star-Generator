@@ -1,0 +1,83 @@
+[gd_scene load_steps=7 format=3 uid="uid://cfqmf30bam1vl"]
+
+[ext_resource type="Script" path="res://scenes/GUI/MainMenu/main_menu.gd" id="1_mokhh"]
+[ext_resource type="PackedScene" uid="uid://358m433lvu2f" path="res://scenes/SaveLoadPanel/SaveLoadPanel.tscn" id="3_0b138"]
+[ext_resource type="PackedScene" uid="uid://b1ye6h5no5cx" path="res://scenes/GUI/MainMenu/progress_window.tscn" id="4_42t1k"]
+[ext_resource type="PackedScene" uid="uid://dbqmblj77nws5" path="res://scenes/GUI/MainMenu/settings_panel.tscn" id="4_gjo0t"]
+[ext_resource type="Script" path="res://assets/generators/CSBridge.cs" id="5_custom"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dcuyl"]
+
+[node name="MainMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_mokhh")
+
+[node name="BackgroundPanel" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -150.0
+offset_top = -150.0
+offset_right = 150.0
+offset_bottom = 150.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_dcuyl")
+
+[node name="MenuButtons" type="VBoxContainer" parent="BackgroundPanel"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="NewButton" type="Button" parent="BackgroundPanel/MenuButtons"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "New Starfield"
+
+[node name="LoadButton" type="Button" parent="BackgroundPanel/MenuButtons"]
+layout_mode = 2
+text = "Load Starfield"
+
+[node name="SaveButton" type="Button" parent="BackgroundPanel/MenuButtons"]
+layout_mode = 2
+text = "Save Starfield"
+
+[node name="SettingsButton" type="Button" parent="BackgroundPanel/MenuButtons"]
+layout_mode = 2
+text = "Settings"
+
+[node name="CloseButton" type="Button" parent="BackgroundPanel/MenuButtons"]
+layout_mode = 2
+text = "Close Menu"
+
+[node name="Label" type="Label" parent="BackgroundPanel"]
+layout_mode = 2
+size_flags_vertical = 0
+theme_override_font_sizes/font_size = 30
+text = "Menu"
+horizontal_alignment = 1
+
+[node name="SettingsPanel" parent="." instance=ExtResource("4_gjo0t")]
+visible = false
+layout_mode = 1
+offset_left = -124.5
+offset_top = -134.0
+offset_right = 124.5
+offset_bottom = 134.0
+
+[node name="SaveLoadPanel" parent="." instance=ExtResource("3_0b138")]
+visible = false
+layout_mode = 1
+
+[node name="ProgressWindow" parent="." instance=ExtResource("4_42t1k")]
+
+[node name="CSBridge" type="Node" parent="."]
+script = ExtResource("5_custom")

@@ -1,8 +1,10 @@
-[gd_scene load_steps=4 format=3 uid="uid://bcvia2tmcrmns"]
+[gd_scene load_steps=5 format=3 uid="uid://bcvia2tmcrmns"]
 
 [ext_resource type="Script" path="res://assets/models/planet/planet_model.gd" id="1_ariwx"]
 
 [sub_resource type="SphereMesh" id="SphereMesh_1q6jr"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_6e0up"]
 
 [sub_resource type="Curve3D" id="Curve3D_1frdt"]
 
@@ -11,6 +13,12 @@ script = ExtResource("1_ariwx")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 mesh = SubResource("SphereMesh_1q6jr")
+
+[node name="Area3D" type="Area3D" parent="MeshInstance3D"]
+visible = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D/Area3D"]
+shape = SubResource("SphereShape3D_6e0up")
 
 [node name="OrbitPath" type="Path3D" parent="."]
 curve = SubResource("Curve3D_1frdt")

@@ -23,7 +23,6 @@ func _ready():
 func load_save_file(file_path: String = SAVE_FILE) -> int:
 	var err = save_data.load(file_path)
 	if err == ERR_FILE_NOT_FOUND:
-		# If the file doesn't exist, it's not an error, just create a new one
 		return OK
 	return err
 
@@ -48,9 +47,6 @@ func save_game(slot: int, save_name: String) -> void:
 	# Get game data
 	var galaxy_data = bridge.GetGalaxyDataForSaving()
 	var systems_data = bridge.GetSystemsDataForSaving()
-	
-	print("galaxy_data size: ", galaxy_data.size())
-	print("systems_data size: ", systems_data.size())
 	
 	# Store in GlobalData
 	GlobalData.set_data(galaxy_data, systems_data)
@@ -80,29 +76,21 @@ func save_game(slot: int, save_name: String) -> void:
 	emit_signal("save_completed", slot)
 
 func load_game(slot: int) -> void:
-	var loaded_data = {}
-	
 	GlobalData.clear_data()
-	GlobalData.galaxy_data = loaded_data.get("galaxy_data", {})
-	GlobalData.systems_data = loaded_data.get("systems_data", {})
 
 	var galaxy_data_str = save_data.get_value("galaxy_data", str(slot), null)
 	var systems_data_str = save_data.get_value("systems_data", str(slot), null)
 	
 	if galaxy_data_str == null or systems_data_str == null:
+		push_error("Save data not found for slot: " + str(slot))
 		emit_signal("load_failed", "Save data not found")
 		return
 	
 	var galaxy_data = str_to_var(galaxy_data_str)
 	var systems_data = str_to_var(systems_data_str)
 	
-	# Store in GlobalData
-	GlobalData.set_data(galaxy_data, systems_data)
-	
-	print("Loaded galaxy data size: ", GlobalData.galaxy_data.size())
-	print("Loaded systems data size: ", GlobalData.systems_data.size())
-	
-	emit_signal("load_completed", slot)
+	GlobalData.set_data(galaxy_data, systems_data)	
+	emit_signal("load_completed", slot, galaxy_data, systems_data)
 
 func _generate_save_summary(bridge) -> String:
 	var system_count = bridge.GetSystemCount()

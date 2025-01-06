@@ -1,0 +1,99 @@
+[gd_scene load_steps=3 format=3 uid="uid://dbqmblj77nws5"]
+
+[ext_resource type="Script" path="res://scenes/GUI/MainMenu/settings_panel.gd" id="1_gyjdh"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1nfn2"]
+
+[node name="SettingsPanel" type="PanelContainer"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -150.0
+offset_right = 200.0
+offset_bottom = 150.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_1nfn2")
+script = ExtResource("1_gyjdh")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Settings"
+horizontal_alignment = 1
+
+[node name="GridContainer" type="GridContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+columns = 2
+
+[node name="XSectorLabel" type="Label" parent="VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "X Sectors:"
+
+[node name="XSectorInput" type="SpinBox" parent="VBoxContainer/GridContainer"]
+layout_mode = 2
+min_value = 1.0
+max_value = 10.0
+value = 3.0
+
+[node name="YSectorLabel" type="Label" parent="VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "Y Sectors:"
+
+[node name="YSectorInput" type="SpinBox" parent="VBoxContainer/GridContainer"]
+layout_mode = 2
+min_value = 1.0
+max_value = 10.0
+value = 3.0
+
+[node name="ZSectorLabel" type="Label" parent="VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "Z Sectors:"
+
+[node name="ZSectorInput" type="SpinBox" parent="VBoxContainer/GridContainer"]
+layout_mode = 2
+min_value = 1.0
+max_value = 10.0
+value = 3.0
+
+[node name="ParsecsLabel" type="Label" parent="VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "Parsecs per Sector:"
+
+[node name="ParsecsInput" type="SpinBox" parent="VBoxContainer/GridContainer"]
+layout_mode = 2
+min_value = 1.0
+value = 10.0
+
+[node name="SystemChanceLabel" type="Label" parent="VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "System Chance (%):"
+
+[node name="SystemChanceInput" type="SpinBox" parent="VBoxContainer/GridContainer"]
+layout_mode = 2
+step = 0.1
+value = 15.0
+
+[node name="AnomalyChanceLabel" type="Label" parent="VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "Anomaly Chance (%):"
+
+[node name="AnomalyChanceInput" type="SpinBox" parent="VBoxContainer/GridContainer"]
+layout_mode = 2
+step = 0.1
+value = 1.0
+
+[node name="ConfirmButton" type="Button" parent="VBoxContainer"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Confirm"
+
+[connection signal="pressed" from="VBoxContainer/ConfirmButton" to="." method="_on_confirm_button_pressed"]

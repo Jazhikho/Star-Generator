@@ -36,7 +36,7 @@ public class SystemArrangement
 		if (stars.Count == 1) return stars;
 
 		int starCount = stars.Count;
-		int pairingRounds = (int)Math.Log(starCount, 2);
+		int pairingRounds = (int)Math.Ceiling(Math.Log(starCount, 2));
 
 		for (int pairingRound = 0; pairingRound < pairingRounds; pairingRound++)
 		{
@@ -64,10 +64,10 @@ public class SystemArrangement
 
 		// For the first pairing round, we use the star's own separation (if any)
 		// For subsequent rounds, we use the separation determined in previous rounds
-		float minSeparation = pairingRound == 0 
-			? (primary.Separation ?? 0f) 
+		float minSeparation = pairingRound == 0
+			? (primary.Separation ?? 0f)
 			: (secondary.HierarchicalSeparation ?? 0f);
-		
+
 		float separationData = starOrbits.DetermineSeparation(pairingRound, minSeparation);
 
 		// Store the hierarchical separation separately

@@ -1,6 +1,6 @@
 extends Node3D
 
-var small_star_scene = preload("res://scenes/TitleScreen/star.tscn")  # Adjust path as needed
+var small_star_scene = preload("res://scenes/TitleScreen/star.tscn")
 @onready var title_label = $TitleLabel
 
 var boundary = {
